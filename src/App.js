@@ -1,10 +1,12 @@
 import React from 'react';
+import { Container, Typography, Box } from '@mui/material';
+import './index.css';
 
 const App = () => {
     return (
-        <div>
-            <h1>Hello, World!</h1>
-        </div>
+        <Container maxWidth="md">
+
+        </Container>
     );
 };
 
