@@ -125,7 +125,7 @@ const Home = () => {
     return (
         <Container maxWidth="xl" className={classes.container}>
             <AppBar className={classes.appBar} position={appBarPosition} color="primary">
-                <Toolbar className={appBarPosition === "fixed" ? classes.appBarFixed : classes.appBarRelative}>
+                <Toolbar >
                     <div className={classes.appBarContainer}>
                         <div className={classes.appBarLeft}>
                             <IconButton
@@ -148,7 +148,7 @@ const Home = () => {
                                 open={Boolean(anchorEl)}
                                 onClose={handleClose}
                             >
-                                <MenuItem onClick={handleClose}>Option 1</MenuItem>
+                                <MenuItem onClick={handleClose} className={classes.menuItem} >Option 1</MenuItem>
                                 <MenuItem onClick={handleClose}>Option 2</MenuItem>
                                 <MenuItem onClick={handleClose}>Option 3</MenuItem>
                                 <MenuItem onClick={handleClose}>Option 4</MenuItem>
@@ -181,13 +181,13 @@ const Home = () => {
                 <Grid container spacing={2}>
                     {books.map((book) => (
                         <Grid item xs={12} sm={6} md={4} lg={3}>
-                            <Card>
+                            <Card className={classes.card}>
                                 <CardMedia  className={classes.cardMedia}
                                             image={book.image}
                                             title={book.title}
                                             alt={book.title}
                                 />
-                                <CardContent>
+                                <CardContent className={classes.cardContent}>
                                     <Typography variant="h5" gutterBottom>{book.title}</Typography>
                                     <Typography variant="body1">{book.author}</Typography>
                                     <Typography variant="body1">{book.description}</Typography>

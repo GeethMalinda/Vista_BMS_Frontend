@@ -6,6 +6,14 @@ export default makeStyles((theme) => ({
         marginLeft: theme.spacing(1),
         marginRight: theme.spacing(1),
     },
+    card: {
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+    },
+    cardContent: {
+        flexGrow: 1,
+    },
 
     container: {
         padding: 0,
@@ -22,6 +30,12 @@ export default makeStyles((theme) => ({
         marginBottom: theme.spacing(2),
         [theme.breakpoints.down("sm")]: {
             padding: "0px 0px",
+        },
+    },
+
+    menuItem: {
+        "&:hover": {
+            textDecoration: "underline",
         },
     },
 
