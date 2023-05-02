@@ -12,12 +12,11 @@ const App = () => {
         <BrowserRouter>
             <Container maxWidth="xl">
                 <Navbar />
-                <Home/>
-            {/*    <Switch>
+                <Switch>
                     <Route path="/" exact component={() => <Redirect to="/auth" />} />
-                    <Route path="/" exact component={BookList} />
-                </Switch>*/}
-             {/*   <SignUp/>*/}
+                    <Route path="/home" exact component={Home} />
+                    <Route path="/auth" exact component={SignUp} />
+                </Switch>
             </Container>
         </BrowserRouter>
 

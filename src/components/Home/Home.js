@@ -12,10 +12,11 @@ import {
     ListItem,
     ListItemIcon,
     ListItemText,
+    IconButton, Menu, MenuItem,
     ListItemSecondaryAction, Grid, Container, InputAdornment, TextField,
 } from "@material-ui/core";
 import useStyles from './style';
-import {Search} from "@mui/icons-material";
+import {Search,ArrowDropDown} from "@mui/icons-material";
 
 //this is the home menu
 const Home = () => {
@@ -25,27 +26,84 @@ const Home = () => {
             id: 1,
             title: "The Alchemist",
             author: "Paulo Coelho",
-            description: "An Andalusian shepherd boy named Santiago travels from his homeland in Spain to the Egyptian desert in search of treasure buried near the Pyramids. Along the way, he meets a variety of people who point him in the right direction, including a gypsy woman, a king, and an alchemist.",
-            image: "https://i.imgur.com/a57a23m.jpg",
+            description: "Book description...",
+            image: "https://designforwriters.com/wp-content/uploads/2017/10/design-for-writers-book-cover-tf-2-a-million-to-one.jpg",
             price: 19.99,
         },
         {
             id: 2,
             title: "Harry Potter and the Sorcerer's Stone",
             author: "J.K. Rowling",
-            description: "Harry Potter has never had a birthday party, never received a Christmas present, and never been kissed. All because he is different from the other children in his neighborhood: Harry Potter is a wizard. Harry's parents were murdered by the evil Lord Voldemort when Harry was just a baby, but Harry survived with only a lightning-bolt scar on his forehead as a memento. Now Harry's life is about to change dramatically. He is about to start his first year at Hogwarts School of Witchcraft and Wizardry, where he will learn about magic and make new friends. But even within the Wizarding community, there is one thing that Harry is afraid of: Lord Voldemort is still out there, and he wants revenge.",
-            image: "https://i.imgur.com/861634a.jpg",
+            description: "Book description...",
+            image: "https://media.harrypotterfanzone.com/deathly-hallows-us-childrens-edition-1050x0-c-default.jpg",
             price: 24.99,
         },
         {
             id: 3,
             title: "To Kill a Mockingbird",
             author: "Harper Lee",
-            description: "Harry Potter has never had a birthday party, never received a Christmas present, and never been kissed. All because he is different from the other children in his neighborhood: Harry Potter is a wizard. Harry's parents were murdered by the evil Lord Voldemort when Harry was just a baby, but Harry survived with only a lightning-bolt scar on his forehead as a memento. Now Harry's life is about to change dramatically. He is about to start his first year at Hogwarts School of Witchcraft and Wizardry, where he will learn about magic and make new friends. But even within the Wizarding community, there is one thing that Harry is afraid of: Lord Voldemort is still out there, and he wants revenge.",
-            image: "https://i.imgur.com/749845b.jpg",
+            description: "Book description...",
+            image: "https://99designs-blog.imgix.net/blog/wp-content/uploads/2022/12/attachment_137125302-e1670235568295.jpeg?auto=format&q=60&fit=max&w=930",
+            price: 16.99,
+        },
+        {
+            id: 4,
+            title: "Book Title 4",
+            author: "Author 4",
+            description: "Book description...",
+            image: "https://marketplace.canva.com/EAFEbtlNK2Q/1/0/1003w/canva-double-exposure-artistic-background-novel-book-cover-sTAyOpO_rTI.jpg",
+            price: 15.99,
+        },
+        {
+            id: 5,
+            title: "Book Title 5",
+            author: "Author 4",
+            description: "Book description...",
+            image: "https://s26162.pcdn.co/wp-content/uploads/2021/10/To_Kill_a_Mockingbird_first_edition_cover.jpg",
+            price: 16.99,
+        },
+        {
+            id: 6,
+            title: "Harry Potter and the Sorcerer's Stone",
+            author: "J.K. Rowling",
+            description: "Book description...",
+            image: "https://media.harrypotterfanzone.com/deathly-hallows-us-childrens-edition-1050x0-c-default.jpg",
+            price: 24.99,
+        },
+        {
+            id: 7,
+            title: "To Kill a Mockingbird",
+            author: "Harper Lee",
+            description: "Book description...",
+            image: "https://99designs-blog.imgix.net/blog/wp-content/uploads/2022/12/attachment_137125302-e1670235568295.jpeg?auto=format&q=60&fit=max&w=930",
+            price: 16.99,
+        },
+        {
+            id: 8,
+            title: "Book Title 4",
+            author: "Author 4",
+            description: "Book description...",
+            image: "https://marketplace.canva.com/EAFEbtlNK2Q/1/0/1003w/canva-double-exposure-artistic-background-novel-book-cover-sTAyOpO_rTI.jpg",
+            price: 15.99,
+        },
+        {
+            id: 9,
+            title: "Book Title 5",
+            author: "Author 4",
+            description: "Book description...",
+            image: "https://s26162.pcdn.co/wp-content/uploads/2021/10/To_Kill_a_Mockingbird_first_edition_cover.jpg",
             price: 16.99,
         },
     ]);
+    const [anchorEl, setAnchorEl] = useState(null);
+
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
 
     const [appBarPosition, setAppBarPosition] = useState("relative");
 
@@ -65,14 +123,37 @@ const Home = () => {
     }, []);
 
     return (
-        <Container maxWidth="xl">
+        <Container maxWidth="xl" className={classes.container}>
             <AppBar className={classes.appBar} position={appBarPosition} color="primary">
                 <Toolbar className={appBarPosition === "fixed" ? classes.appBarFixed : classes.appBarRelative}>
                     <div className={classes.appBarContainer}>
                         <div className={classes.appBarLeft}>
-                            <Typography variant="h6" color="inherit" className={classes.appBarTitle}>
-                                Blackwell's
-                            </Typography>
+                            <IconButton
+                                edge="start"
+                                color="inherit"
+                                aria-label="menu"
+                                aria-controls="simple-menu"
+                                aria-haspopup="true"
+                                onClick={handleClick}
+                            >
+                                <Typography variant="h6" className={classes.menuTitle}>
+                                    Blackwell's
+                                </Typography>
+                                <ArrowDropDown />
+                            </IconButton>
+                            <Menu
+                                id="simple-menu"
+                                anchorEl={anchorEl}
+                                keepMounted
+                                open={Boolean(anchorEl)}
+                                onClose={handleClose}
+                            >
+                                <MenuItem onClick={handleClose}>Option 1</MenuItem>
+                                <MenuItem onClick={handleClose}>Option 2</MenuItem>
+                                <MenuItem onClick={handleClose}>Option 3</MenuItem>
+                                <MenuItem onClick={handleClose}>Option 4</MenuItem>
+                                <MenuItem onClick={handleClose}>Option 5</MenuItem>
+                            </Menu>
                             <TextField
                                 variant="outlined"
                                 color="inherit"
@@ -96,66 +177,38 @@ const Home = () => {
                     </div>
                 </Toolbar>
             </AppBar>
-
-
-            <div style={{marginTop: '300px'}}>
+            <Container maxWidth="md" className={classes.container}>
                 <Grid container spacing={2}>
                     {books.map((book) => (
                         <Grid item xs={12} sm={6} md={4} lg={3}>
                             <Card>
-                                <CardMedia
-                                    image={book.image}
-                                    title={book.title}
-                                    alt={book.title}
+                                <CardMedia  className={classes.cardMedia}
+                                            image={book.image}
+                                            title={book.title}
+                                            alt={book.title}
                                 />
                                 <CardContent>
                                     <Typography variant="h5" gutterBottom>{book.title}</Typography>
                                     <Typography variant="body1">{book.author}</Typography>
                                     <Typography variant="body1">{book.description}</Typography>
+                                    <Typography variant="button">{book.price}</Typography>
                                 </CardContent>
                                 <List>
                                     <ListItem>
                                         <ListItemIcon>
-                                            <Button variant="outlined" color="primary">
+                                            <Button variant="contained" color="primary">
                                                 Add to Cart
                                             </Button>
                                         </ListItemIcon>
-                                        <ListItemText primary={book.price}/>
+                                        {/*<ListItemText primary={book.price}/>*/}
                                     </ListItem>
                                 </List>
                             </Card>
                         </Grid>
                     ))}
                 </Grid>
-            </div>
-            <Grid container spacing={2}>
-                {books.map((book) => (
-                    <Grid item xs={12} sm={6} md={4} lg={3}>
-                        <Card>
-                            <CardMedia
-                                image={book.image}
-                                title={book.title}
-                                alt={book.title}
-                            />
-                            <CardContent>
-                                <Typography variant="h5" gutterBottom>{book.title}</Typography>
-                                <Typography variant="body1">{book.author}</Typography>
-                                <Typography variant="body1">{book.description}</Typography>
-                            </CardContent>
-                            <List>
-                                <ListItem>
-                                    <ListItemIcon>
-                                        <Button variant="outlined" color="primary">
-                                            Add to Cart
-                                        </Button>
-                                    </ListItemIcon>
-                                    <ListItemText primary={book.price}/>
-                                </ListItem>
-                            </List>
-                        </Card>
-                    </Grid>
-                ))}
-            </Grid>
+            </Container>
+
 
         </Container>
     );
