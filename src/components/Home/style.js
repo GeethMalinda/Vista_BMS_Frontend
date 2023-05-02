@@ -23,6 +23,7 @@ export default makeStyles((theme) => ({
         height: 0,
         paddingTop: '56.25%', // 16:9 aspect ratio
     },
+
     appBar: {
         borderRadius: 15,
         padding: "0px 20px",

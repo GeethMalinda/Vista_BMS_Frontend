@@ -106,6 +106,20 @@ const Home = () => {
     };
 
     const [appBarPosition, setAppBarPosition] = useState("relative");
+    const [clickedButtons, setClickedButtons] = useState({});
+    const [clickedCategory, setClickedCategory] = useState("");
+
+
+    const handleButtonClick = (id) => {
+        setClickedButtons((prevState) => ({
+            ...prevState,
+            [id]: !prevState[id],
+        }));
+    };
+
+    const handleCategoryClick = (category) => {
+        setClickedCategory((prevCategory) => (prevCategory === category ? "" : category));
+    };
 
     useEffect(() => {
         const handleScroll = () => {
@@ -168,12 +182,53 @@ const Home = () => {
                             />
                         </div>
                         <div className={classes.appBarRight}>
-                            <Button className={classes.appBarButton}>Fiction</Button>
-                            <Button className={classes.appBarButton}>Nonfiction</Button>
-                            <Button className={classes.appBarButton}>Travel</Button>
-                            <Button className={classes.appBarButton}>Sinhala</Button>
-                            <Button className={classes.appBarButton}>Other</Button>
+                            <Button
+                                className={classes.appBarButton}
+                                onClick={() => handleCategoryClick("Fiction")}
+                                style={{
+                                    color: clickedCategory === "Fiction" ? "#00FF00" : "",
+                                }}
+                            >
+                                Fiction
+                            </Button>
+                            <Button
+                                className={classes.appBarButton}
+                                onClick={() => handleCategoryClick("Nonfiction")}
+                                style={{
+                                    color: clickedCategory === "Nonfiction" ? "#00FF00" : "",
+                                }}
+                            >
+                                Nonfiction
+                            </Button>
+                            <Button
+                                className={classes.appBarButton}
+                                onClick={() => handleCategoryClick("Travel")}
+                                style={{
+                                    color: clickedCategory === "Travel" ? "#00FF00" : "",
+                                }}
+                            >
+                                Travel
+                            </Button>
+                            <Button
+                                className={classes.appBarButton}
+                                onClick={() => handleCategoryClick("Sinhala")}
+                                style={{
+                                    color: clickedCategory === "Sinhala" ? "#00FF00" : "",
+                                }}
+                            >
+                                Sinhala
+                            </Button>
+                            <Button
+                                className={classes.appBarButton}
+                                onClick={() => handleCategoryClick("Other")}
+                                style={{
+                                    color: clickedCategory === "Other" ? "#00FF00" : "",
+                                }}
+                            >
+                                Other
+                            </Button>
                         </div>
+
                     </div>
                 </Toolbar>
             </AppBar>
@@ -196,7 +251,14 @@ const Home = () => {
                                 <List>
                                     <ListItem>
                                         <ListItemIcon>
-                                            <Button variant="contained" color="primary">
+                                            <Button
+                                                variant="contained"
+                                                color={clickedButtons[book.id] ? "default" : "primary"}
+                                                style={{
+                                                    backgroundColor: clickedButtons[book.id] ? "#00FF00" : "",
+                                                }}
+                                                onClick={() => handleButtonClick(book.id)}
+                                            >
                                                 Add to Cart
                                             </Button>
                                         </ListItemIcon>
