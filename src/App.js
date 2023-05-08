@@ -6,6 +6,7 @@ import SignUp from "./components/Auth/Auth";
 import {BrowserRouter, Redirect, Route, Switch} from "react-router-dom";
 import Auth from "./components/Auth/Auth";
 import Home from "./components/Home/Home";
+import BookDetails from './components/PostDetails/BookDetails';
 
 const App = () => {
     return (
@@ -16,6 +17,7 @@ const App = () => {
                     <Route path="/" exact component={() => <Redirect to="/auth" />} />
                     <Route path="/home" exact component={Home} />
                     <Route path="/auth" exact component={SignUp} />
+                    <Route path="/posts/:id" exact component={BookDetails} />
                 </Switch>
             </Container>
         </BrowserRouter>

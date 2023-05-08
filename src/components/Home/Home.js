@@ -17,11 +17,17 @@ import {
 } from "@material-ui/core";
 import useStyles from './style';
 import {Search,ArrowDropDown} from "@mui/icons-material";
+import { useHistory } from "react-router-dom";
+import {useDispatch} from "react-redux";
+import {setBooks} from "../../actions/books";
+import { useSelector } from 'react-redux';
+
 
 //this is the home menu
 const Home = () => {
+    const dispatch = useDispatch();
     const classes = useStyles();
-    const [books, setBooks] = useState([
+    const [books, setBooksDummy] = useState([
         {
             id: 1,
             title: "The Alchemist",
@@ -96,6 +102,16 @@ const Home = () => {
         },
     ]);
     const [anchorEl, setAnchorEl] = useState(null);
+    const history = useHistory();
+
+
+    const storedBooks = useSelector((state) => state.books.books);
+
+    useEffect(() => {
+        if (storedBooks.length === 0) {
+            dispatch(setBooks(books));
+        }
+    }, [dispatch, storedBooks]);
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -104,6 +120,11 @@ const Home = () => {
     const handleClose = () => {
         setAnchorEl(null);
     };
+
+    const handleCardClick = (id) => {
+        history.push(`/posts/${id}`);
+    };
+
 
     const [appBarPosition, setAppBarPosition] = useState("relative");
     const [clickedButtons, setClickedButtons] = useState({});
@@ -235,8 +256,8 @@ const Home = () => {
             <Container maxWidth="md" className={classes.container}>
                 <Grid container spacing={2}>
                     {books.map((book) => (
-                        <Grid item xs={12} sm={6} md={4} lg={3}>
-                            <Card className={classes.card}>
+                        <Grid key={book.id} item xs={12} sm={6} md={4} lg={3}>
+                            <Card className={classes.card} onClick={() => handleCardClick(book.id)}>
                                 <CardMedia  className={classes.cardMedia}
                                             image={book.image}
                                             title={book.title}
