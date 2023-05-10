@@ -4,13 +4,14 @@ import {
   FETCH_BY_SEARCH,
   LIKE,
   COMMENT,
-  SET_BOOKS,
+  SET_BOOKS, SELECT_BOOK,
 } from "../constants/actionTypes";
 
 const initialState = {
   books: [],
   book: null,
   searchResults: [],
+  selectedBook: null
 };
 
 const bookReducer = (state = initialState, action) => {
@@ -20,6 +21,9 @@ const bookReducer = (state = initialState, action) => {
         ...state,
         books: action.payload,
       };
+    case SELECT_BOOK:
+      return {...state, selectedBook: action.payload};
+
     case FETCH_ALL:
       return {
         ...state,

@@ -10,7 +10,7 @@ import useStyles from './styles';
 
 //This is my bookdetails panel
 const BookDetails = () => {
-  const { book, books } = useSelector((state) => state.books);
+  const { selectedBook: book, books } = useSelector((state) => state.books);
   const dispatch = useDispatch();
   const history = useHistory();
   const classes = useStyles();
@@ -23,9 +23,10 @@ const BookDetails = () => {
 
   useEffect(() => {
     if (book) {
-      dispatch(getBooksBySearch({ search: 'none', tags: book?.tags.join(',') }));
+      dispatch(getBooksBySearch({ search: 'none', tags: book?.tags?.join(',') }));
     }
   }, [book]);
+
 
   // if (!book) return null;
 
@@ -46,11 +47,12 @@ const BookDetails = () => {
         <div className={classes.card}>
           <div className={classes.section}>
             <Typography variant="h3" component="h2">{book.title}</Typography>
-            <Typography gutterBottom variant="h6" color="textSecondary" component="h2">{book.tags.map((tag) => (
-                <Link to={`/tags/${tag}`} style={{ textDecoration: 'none', color: '#3f51b5' }}>
-                  {` #${tag} `}
-                </Link>
-            ))}
+            <Typography gutterBottom variant="h6" color="textSecondary" component="h2">
+              {book.tags?.map((tag) => ( // Added optional chaining here
+                  <Link to={`/tags/${tag}`} style={{ textDecoration: 'none', color: '#3f51b5' }}>
+                    {` #${tag} `}
+                  </Link>
+              ))}
             </Typography>
             <Typography gutterBottom variant="body1" component="p">{book.message}</Typography>
             <Typography variant="h6">

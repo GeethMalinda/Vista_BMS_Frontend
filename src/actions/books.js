@@ -5,7 +5,7 @@ import {
     FETCH_BY_SEARCH,
     LIKE,
     COMMENT,
-    SET_BOOKS,
+    SET_BOOKS, SELECT_BOOK,
 } from '../constants/actionTypes';import * as api from '../api/index.js';
 
 // Dummy data
@@ -42,6 +42,13 @@ export const setBooks = (books) => {
     return {
         type: SET_BOOKS,
         payload: books,
+    };
+};
+
+export const selectBook = (book) => {
+    return {
+        type: SELECT_BOOK,
+        payload: book
     };
 };
 

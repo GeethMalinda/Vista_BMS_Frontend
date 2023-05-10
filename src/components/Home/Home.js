@@ -19,7 +19,7 @@ import useStyles from './style';
 import {Search,ArrowDropDown} from "@mui/icons-material";
 import { useHistory } from "react-router-dom";
 import {useDispatch} from "react-redux";
-import {setBooks} from "../../actions/books";
+import {selectBook, setBooks} from "../../actions/books";
 import { useSelector } from 'react-redux';
 
 
@@ -121,10 +121,10 @@ const Home = () => {
         setAnchorEl(null);
     };
 
-    const handleCardClick = (id) => {
-        history.push(`/posts/${id}`);
+    const handleCardClick = (book) => {
+        dispatch(selectBook(book));
+        history.push(`/posts/${book.id}`);
     };
-
 
     const [appBarPosition, setAppBarPosition] = useState("relative");
     const [clickedButtons, setClickedButtons] = useState({});
@@ -257,7 +257,7 @@ const Home = () => {
                 <Grid container spacing={2}>
                     {books.map((book) => (
                         <Grid key={book.id} item xs={12} sm={6} md={4} lg={3}>
-                            <Card className={classes.card} onClick={() => handleCardClick(book.id)}>
+                            <Card className={classes.card} onClick={() => handleCardClick(book)}>
                                 <CardMedia  className={classes.cardMedia}
                                             image={book.image}
                                             title={book.title}

@@ -13,3 +13,4 @@ export const FETCH_BY_CREATOR = 'FETCH_BY_CREATOR';
 export const AUTH = 'AUTH';
 export const LOGOUT = 'LOGOUT';
 export const SET_BOOKS = 'SET_BOOKS';
+export const SELECT_BOOK = 'SELECT_BOOK';
