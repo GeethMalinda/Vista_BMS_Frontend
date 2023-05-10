@@ -56,12 +56,18 @@ const BookDetails = () => {
             </Typography>
             <Typography gutterBottom variant="body1" component="p">{book.message}</Typography>
             <Typography variant="h6">
-              Created by:
+              Author:
               <Link to={`/creators/${book.name}`} style={{ textDecoration: 'none', color: '#3f51b5' }}>
-                {` ${book.name}`}
+                {` ${book.author}`}
               </Link>
             </Typography>
-            <Typography variant="body1">{moment(book.createdAt).fromNow()}</Typography>
+            <Typography variant="body1"> Stock Published : {moment(book.createdAt).fromNow()}</Typography>
+
+            <Typography variant="h4">
+              <Link to={`/creators/${book.name}`} style={{ textDecoration: 'none', color: '#FF1493' }}>
+               $ {` ${book.price}`}
+              </Link>
+            </Typography>
             <Divider style={{ margin: '20px 0' }} />
             <Typography variant="body1"><strong>Realtime Chat - coming soon!</strong></Typography>
             <Divider style={{ margin: '20px 0' }} />
@@ -69,7 +75,7 @@ const BookDetails = () => {
             <Divider style={{ margin: '20px 0' }} />
           </div>
           <div className={classes.imageSection}>
-            <img className={classes.media} src={book.selectedFile || 'https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png'} alt={book.title} />
+            <img className={classes.media} src={book.image || 'https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png'} alt={book.title} />
           </div>
         </div>
         {recommendedPosts && recommendedPosts.length > 0 && (
