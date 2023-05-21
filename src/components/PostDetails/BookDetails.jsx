@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Paper, Typography, CircularProgress, Divider } from '@material-ui/core/';
+import { Paper, Typography, CircularProgress, Divider ,Button } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 import { useParams, useHistory, Link } from 'react-router-dom';
@@ -7,6 +7,7 @@ import { useParams, useHistory, Link } from 'react-router-dom';
 import { getBook, getBooksBySearch } from '../../actions/books'; // Updated import
 import CommentSection from './CommentSection';
 import useStyles from './styles';
+import {AddToPhotos} from "@mui/icons-material";
 
 //This is my bookdetails panel
 const BookDetails = () => {
@@ -69,10 +70,19 @@ const BookDetails = () => {
               </Link>
             </Typography>
             <Divider style={{ margin: '20px 0' }} />
-            <Typography variant="body1"><strong>Realtime Chat - coming soon!</strong></Typography>
+            {/*<Typography variant="body1"><strong>Realtime Chat - coming soon!</strong></Typography>*/}
+            <Button variant="contained" raised color="primary">
+              <AddToPhotos />
+              Add to cart
+            </Button>
             <Divider style={{ margin: '20px 0' }} />
-            {/*<CommentSection book={book} />*/}
+            <CommentSection book={book} />
             <Divider style={{ margin: '20px 0' }} />
+            <Typography variant="h6"><strong>More Informations </strong></Typography>
+            <Typography variant="body1"><strong>Language</strong></Typography>
+            <Typography variant="body1"><strong>Publisher</strong></Typography>
+            <Typography variant="body1"><strong>ISBN</strong></Typography>
+            <Typography variant="body1"><strong>Pages</strong></Typography>
           </div>
           <div className={classes.imageSection}>
             <img className={classes.media} src={book.image || 'https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png'} alt={book.title} />
