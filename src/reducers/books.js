@@ -5,7 +5,7 @@ import {
   LIKE,
   COMMENT,
   SET_BOOKS, SELECT_BOOK,
-} from "../constants/actionTypes";
+} from "../variables/constants/actionTypes";
 
 const initialState = {
   books: [],

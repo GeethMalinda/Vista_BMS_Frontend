@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 import { useParams, useHistory, Link } from 'react-router-dom';
 
-import { getBook, getBooksBySearch } from '../../actions/books'; // Updated import
+import { getBook, getBooksBySearch } from '../../../actions/books'; // Updated import
 import CommentSection from './CommentSection';
 import useStyles from './styles';
 import {AddToPhotos} from "@mui/icons-material";

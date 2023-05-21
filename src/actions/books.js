@@ -6,7 +6,7 @@ import {
     LIKE,
     COMMENT,
     SET_BOOKS, SELECT_BOOK,
-} from '../constants/actionTypes';import * as api from '../api/index.js';
+} from '../variables/constants/actionTypes';import * as api from '../api/index.js';
 
 // Dummy data
 const dummyData = [

@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import { AppBar, Typography, Toolbar, Avatar, Button } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 
-import VistaText from '../../images/img.png';
+import VistaText from '../../../images/img.png';
 import useStyles from './style';
 
 //Nav bar
