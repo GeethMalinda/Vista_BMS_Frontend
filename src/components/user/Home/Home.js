@@ -17,10 +17,11 @@ import {
 } from "@material-ui/core";
 import useStyles from './style';
 import {Search,ArrowDropDown} from "@mui/icons-material";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from 'react-router-dom'; // Import useNavigate instead of useHistory
 import {useDispatch} from "react-redux";
 import {selectBook, setBooks} from "../../../actions/books";
 import { useSelector } from 'react-redux';
+import Navbar from "../navbar/Navbar";
 
 
 //this is the home menu
@@ -102,7 +103,8 @@ const Home = () => {
         },
     ]);
     const [anchorEl, setAnchorEl] = useState(null);
-    const history = useHistory();
+    const navigate = useNavigate(); // Use useNavigate instead of useHistory
+
 
 
     const storedBooks = useSelector((state) => state.books.books);
@@ -123,7 +125,7 @@ const Home = () => {
 
     const handleCardClick = (book) => {
         dispatch(selectBook(book));
-        history.push(`/posts/${book.id}`);
+        navigate(`/posts/${book.id}`);
     };
 
     const [appBarPosition, setAppBarPosition] = useState("relative");
@@ -158,142 +160,145 @@ const Home = () => {
     }, []);
 
     return (
-        <Container maxWidth="xl" className={classes.container}>
-            <AppBar className={classes.appBar} position={appBarPosition} color="primary">
-                <Toolbar >
-                    <div className={classes.appBarContainer}>
-                        <div className={classes.appBarLeft}>
-                            <IconButton
-                                edge="start"
-                                color="inherit"
-                                aria-label="menu"
-                                aria-controls="simple-menu"
-                                aria-haspopup="true"
-                                onClick={handleClick}
-                            >
-                                <Typography variant="h6" className={classes.menuTitle}>
-                                    Blackwell's
-                                </Typography>
-                                <ArrowDropDown />
-                            </IconButton>
-                            <Menu
-                                id="simple-menu"
-                                anchorEl={anchorEl}
-                                keepMounted
-                                open={Boolean(anchorEl)}
-                                onClose={handleClose}
-                            >
-                                <MenuItem onClick={handleClose} className={classes.menuItem} >Option 1</MenuItem>
-                                <MenuItem onClick={handleClose}>Option 2</MenuItem>
-                                <MenuItem onClick={handleClose}>Option 3</MenuItem>
-                                <MenuItem onClick={handleClose}>Option 4</MenuItem>
-                                <MenuItem onClick={handleClose}>Option 5</MenuItem>
-                            </Menu>
-                            <TextField
-                                variant="outlined"
-                                color="inherit"
-                                size="small"
-                                InputProps={{
-                                    startAdornment: (
-                                        <InputAdornment position="start">
-                                            <Search />
-                                        </InputAdornment>
-                                    ),
-                                }}
-                            />
-                        </div>
-                        <div className={classes.appBarRight}>
-                            <Button
-                                className={classes.appBarButton}
-                                onClick={() => handleCategoryClick("Fiction")}
-                                style={{
-                                    color: clickedCategory === "Fiction" ? "#00FF00" : "",
-                                }}
-                            >
-                                Fiction
-                            </Button>
-                            <Button
-                                className={classes.appBarButton}
-                                onClick={() => handleCategoryClick("Nonfiction")}
-                                style={{
-                                    color: clickedCategory === "Nonfiction" ? "#00FF00" : "",
-                                }}
-                            >
-                                Nonfiction
-                            </Button>
-                            <Button
-                                className={classes.appBarButton}
-                                onClick={() => handleCategoryClick("Travel")}
-                                style={{
-                                    color: clickedCategory === "Travel" ? "#00FF00" : "",
-                                }}
-                            >
-                                Travel
-                            </Button>
-                            <Button
-                                className={classes.appBarButton}
-                                onClick={() => handleCategoryClick("Sinhala")}
-                                style={{
-                                    color: clickedCategory === "Sinhala" ? "#00FF00" : "",
-                                }}
-                            >
-                                Sinhala
-                            </Button>
-                            <Button
-                                className={classes.appBarButton}
-                                onClick={() => handleCategoryClick("Other")}
-                                style={{
-                                    color: clickedCategory === "Other" ? "#00FF00" : "",
-                                }}
-                            >
-                                Other
-                            </Button>
-                        </div>
-
-                    </div>
-                </Toolbar>
-            </AppBar>
-            <Container maxWidth="md" className={classes.container}>
-                <Grid container spacing={2}>
-                    {books.map((book) => (
-                        <Grid key={book.id} item xs={12} sm={6} md={4} lg={3}>
-                            <Card className={classes.card} onClick={() => handleCardClick(book)}>
-                                <CardMedia  className={classes.cardMedia}
-                                            image={book.image}
-                                            title={book.title}
-                                            alt={book.title}
+        <>
+            <Navbar/>
+            <Container maxWidth="xl" className={classes.container}>
+                <AppBar className={classes.appBar} position={appBarPosition} color="primary">
+                    <Toolbar >
+                        <div className={classes.appBarContainer}>
+                            <div className={classes.appBarLeft}>
+                                <IconButton
+                                    edge="start"
+                                    color="inherit"
+                                    aria-label="menu"
+                                    aria-controls="simple-menu"
+                                    aria-haspopup="true"
+                                    onClick={handleClick}
+                                >
+                                    <Typography variant="h6" className={classes.menuTitle}>
+                                        Blackwell's
+                                    </Typography>
+                                    <ArrowDropDown />
+                                </IconButton>
+                                <Menu
+                                    id="simple-menu"
+                                    anchorEl={anchorEl}
+                                    keepMounted
+                                    open={Boolean(anchorEl)}
+                                    onClose={handleClose}
+                                >
+                                    <MenuItem onClick={handleClose} className={classes.menuItem} >Option 1</MenuItem>
+                                    <MenuItem onClick={handleClose}>Option 2</MenuItem>
+                                    <MenuItem onClick={handleClose}>Option 3</MenuItem>
+                                    <MenuItem onClick={handleClose}>Option 4</MenuItem>
+                                    <MenuItem onClick={handleClose}>Option 5</MenuItem>
+                                </Menu>
+                                <TextField
+                                    variant="outlined"
+                                    color="inherit"
+                                    size="small"
+                                    InputProps={{
+                                        startAdornment: (
+                                            <InputAdornment position="start">
+                                                <Search />
+                                            </InputAdornment>
+                                        ),
+                                    }}
                                 />
-                                <CardContent className={classes.cardContent}>
-                                    <Typography variant="h5" gutterBottom>{book.title}</Typography>
-                                    <Typography variant="body1">{book.author}</Typography>
-                                    <Typography variant="body1">{book.description}</Typography>
-                                    <Typography variant="button">{book.price}</Typography>
-                                </CardContent>
-                                <List>
-                                    <ListItem>
-                                        <ListItemIcon>
-                                            <Button
-                                                variant="contained"
-                                                color={clickedButtons[book.id] ? "default" : "primary"}
-                                                style={{
-                                                    backgroundColor: clickedButtons[book.id] ? "#00FF00" : "",
-                                                }}
-                                                onClick={() => handleButtonClick(book.id)}
-                                            >
-                                                Add to Cart
-                                            </Button>
-                                        </ListItemIcon>
-                                        {/*<ListItemText primary={book.price}/>*/}
-                                    </ListItem>
-                                </List>
-                            </Card>
-                        </Grid>
-                    ))}
-                </Grid>
+                            </div>
+                            <div className={classes.appBarRight}>
+                                <Button
+                                    className={classes.appBarButton}
+                                    onClick={() => handleCategoryClick("Fiction")}
+                                    style={{
+                                        color: clickedCategory === "Fiction" ? "#00FF00" : "",
+                                    }}
+                                >
+                                    Fiction
+                                </Button>
+                                <Button
+                                    className={classes.appBarButton}
+                                    onClick={() => handleCategoryClick("Nonfiction")}
+                                    style={{
+                                        color: clickedCategory === "Nonfiction" ? "#00FF00" : "",
+                                    }}
+                                >
+                                    Nonfiction
+                                </Button>
+                                <Button
+                                    className={classes.appBarButton}
+                                    onClick={() => handleCategoryClick("Travel")}
+                                    style={{
+                                        color: clickedCategory === "Travel" ? "#00FF00" : "",
+                                    }}
+                                >
+                                    Travel
+                                </Button>
+                                <Button
+                                    className={classes.appBarButton}
+                                    onClick={() => handleCategoryClick("Sinhala")}
+                                    style={{
+                                        color: clickedCategory === "Sinhala" ? "#00FF00" : "",
+                                    }}
+                                >
+                                    Sinhala
+                                </Button>
+                                <Button
+                                    className={classes.appBarButton}
+                                    onClick={() => handleCategoryClick("Other")}
+                                    style={{
+                                        color: clickedCategory === "Other" ? "#00FF00" : "",
+                                    }}
+                                >
+                                    Other
+                                </Button>
+                            </div>
+
+                        </div>
+                    </Toolbar>
+                </AppBar>
+                <Container maxWidth="md" className={classes.container}>
+                    <Grid container spacing={2}>
+                        {books.map((book) => (
+                            <Grid key={book.id} item xs={12} sm={6} md={4} lg={3}>
+                                <Card className={classes.card} onClick={() => handleCardClick(book)}>
+                                    <CardMedia  className={classes.cardMedia}
+                                                image={book.image}
+                                                title={book.title}
+                                                alt={book.title}
+                                    />
+                                    <CardContent className={classes.cardContent}>
+                                        <Typography variant="h5" gutterBottom>{book.title}</Typography>
+                                        <Typography variant="body1">{book.author}</Typography>
+                                        <Typography variant="body1">{book.description}</Typography>
+                                        <Typography variant="button">{book.price}</Typography>
+                                    </CardContent>
+                                    <List>
+                                        <ListItem>
+                                            <ListItemIcon>
+                                                <Button
+                                                    variant="contained"
+                                                    color={clickedButtons[book.id] ? "default" : "primary"}
+                                                    style={{
+                                                        backgroundColor: clickedButtons[book.id] ? "#00FF00" : "",
+                                                    }}
+                                                    onClick={() => handleButtonClick(book.id)}
+                                                >
+                                                    Add to Cart
+                                                </Button>
+                                            </ListItemIcon>
+                                            {/*<ListItemText primary={book.price}/>*/}
+                                        </ListItem>
+                                    </List>
+                                </Card>
+                            </Grid>
+                        ))}
+                    </Grid>
+                </Container>
+
+
             </Container>
-
-
-        </Container>
+        </>
     );
 }
 

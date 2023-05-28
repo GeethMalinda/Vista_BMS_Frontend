@@ -2,8 +2,8 @@ import React, { useEffect } from 'react';
 import { Paper, Typography, CircularProgress, Divider ,Button } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
-import { useParams, useHistory, Link } from 'react-router-dom';
-
+import { useParams, Link  } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate instead of useHistory
 import { getBook, getBooksBySearch } from '../../../actions/books'; // Updated import
 import CommentSection from './CommentSection';
 import useStyles from './styles';
@@ -14,6 +14,8 @@ const BookDetails = () => {
   const { selectedBook: book, books } = useSelector((state) => state.books);
   const dispatch = useDispatch();
   const history = useHistory();
+  const navigate = useNavigate(); // Use useNavigate instead of useHistory
+
   const classes = useStyles();
   const { id } = useParams();
 
@@ -31,7 +33,10 @@ const BookDetails = () => {
 
   // if (!book) return null;
 
+/*
   const openPost = (_id) => history.push(`/posts/${_id}`);
+*/
+  const openPost = (_id) => navigate(`/posts/${_id}`);
 
   if (!book) {
     return (
