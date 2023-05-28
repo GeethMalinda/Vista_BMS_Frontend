@@ -23,7 +23,7 @@ export default function Router() {
       path: '/admin',
       element: <DashboardLayout />,
       children: [
-        { element: <Navigate to="/admin" />, index: true },
+        { element: <Navigate to="/admin/app" />, index: true },
         { path: 'app', element: <DashboardAppPage /> },
         { path: 'user', element: <UserPage /> },
         { path: 'products', element: <ProductsPage /> },
@@ -35,7 +35,7 @@ export default function Router() {
       element: <Home />,
       children: [
         { element: <Navigate to="/customer" />, index: true },
-        { path: ':id', element: <BookDetails /> },
+        { path: ':id', element: <DashboardAppPage /> },
       ],
     },
     {

@@ -125,7 +125,7 @@ const Home = () => {
 
     const handleCardClick = (book) => {
         dispatch(selectBook(book));
-        navigate(`/posts/${book.id}`);
+        navigate(`/customer/${book.id}`);
     };
 
     const [appBarPosition, setAppBarPosition] = useState("relative");

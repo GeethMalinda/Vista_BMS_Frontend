@@ -23,6 +23,7 @@ const SignUp = () => {
     setForm(initialState);
     setIsSignup((prevIsSignup) => !prevIsSignup);
     setShowPassword(false);
+    navigate('/customer'); // Use navigate instead of history.push
   };
 
   const handleSubmit = (e) => {
