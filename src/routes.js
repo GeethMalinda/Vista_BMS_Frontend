@@ -8,12 +8,12 @@ import SignUp from "./components/auth/Auth";
 
 // customer
 import Home from "./components/user/Home/Home";
-import BookDetails from "./components/user/PostDetails/BookDetails";
 import DashboardAppPage from "./components/admin/pages/DashboardAppPage";
 import UserPage from "./components/admin/pages/UserPage";
 import ProductsPage from "./components/admin/pages/ProductsPage";
 import BlogPage from "./components/admin/pages/BlogPage";
 import Page404 from "./components/admin/pages/Page404";
+import BookDetails from "./components/user/PostDetails/BookDetails";
 
 // ----------------------------------------------------------------------
 
@@ -33,10 +33,10 @@ export default function Router() {
     {
       path: '/customer',
       element: <Home />,
-      children: [
-        { element: <Navigate to="/customer" />, index: true },
-        { path: ':id', element: <DashboardAppPage /> },
-      ],
+    },
+    {
+      path: '/customer/book/:id',
+      element: <BookDetails />,
     },
     {
       path: '/login',

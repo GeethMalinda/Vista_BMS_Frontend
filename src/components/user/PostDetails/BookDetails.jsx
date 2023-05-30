@@ -13,14 +13,14 @@ import {AddToPhotos} from "@mui/icons-material";
 const BookDetails = () => {
   const { selectedBook: book, books } = useSelector((state) => state.books);
   const dispatch = useDispatch();
-  const history = useHistory();
   const navigate = useNavigate(); // Use useNavigate instead of useHistory
 
   const classes = useStyles();
   const { id } = useParams();
 
-  console.log( id ," id ")
   useEffect(() => {
+    console.log('use effect')
+    console.log('id ', id)
     dispatch(getBook(id));
   }, [id]);
 
@@ -36,7 +36,10 @@ const BookDetails = () => {
 /*
   const openPost = (_id) => history.push(`/posts/${_id}`);
 */
-  const openPost = (_id) => navigate(`/posts/${_id}`);
+  const openPost = (_id) => {
+    navigate(`/customer/book/${_id}`);
+    console.log(_id)
+  }
 
   if (!book) {
     return (
