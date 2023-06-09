@@ -1,24 +1,45 @@
-// import axios from 'axios';
-//
-// const API = axios.create({ baseURL: 'http://localhost:5000' });
-//
-// API.interceptors.request.use((req) => {
-//   if (localStorage.getItem('profile')) {
-//     req.headers.Authorization = `Bearer ${JSON.parse(localStorage.getItem('profile')).token}`;
-//   }
-//
-//   return req;
-// });
-//
-// export const fetchPost = (id) => API.get(`/posts/${id}`);
-// export const fetchPosts = (page) => API.get(`/posts?page=${page}`);
-// export const fetchPostsByCreator = (name) => API.get(`/posts/creator?name=${name}`);
-// export const fetchPostsBySearch = (searchQuery) => API.get(`/posts/search?searchQuery=${searchQuery.search || 'none'}&tags=${searchQuery.tags}`);
-// export const createPost = (newPost) => API.post('/posts', newPost);
-// export const likePost = (id) => API.patch(`/posts/${id}/likePost`);
-// export const comment = (value, id) => API.post(`/posts/${id}/commentPost`, { value });
-// export const updatePost = (id, updatedPost) => API.patch(`/posts/${id}`, updatedPost);
-// export const deletePost = (id) => API.delete(`/posts/${id}`);
-//
-// export const signIn = (formData) => API.post('/user/signin', formData);
-// export const signUp = (formData) => API.post('/user/signup', formData);
+import axios from 'axios';
+
+const API_URL = 'http://localhost:8080/api/books';
+
+const axiosInstance = axios.create({
+    baseURL: API_URL,
+});
+
+axiosInstance.interceptors.request.use(function (config) {
+    // Here, you can still perform actions before the request is sent
+    return config;
+}, function (error) {
+    // If there's an error in the request, reject the Promise
+    return Promise.reject(error);
+});
+
+axiosInstance.interceptors.response.use(function (response) {
+    // Any status code that lie within the range of 2xx cause this function to trigger
+    // Do something with response data
+    return response;
+}, function (error) {
+    // Any status codes that falls outside the range of 2xx cause this function to trigger
+    // Do something with response error
+    return Promise.reject(error);
+});
+
+export const getAllBooks = () => {
+    return axiosInstance.get('/');
+}
+
+export const getBookByIsbn = (isbn) => {
+    return axiosInstance.get(`/${isbn}`);
+}
+
+export const createBook = (book) => {
+    return axiosInstance.post('/', book);
+}
+
+export const updateBook = (book) => {
+    return axiosInstance.put('/', book);
+}
+
+export const deleteBook = (isbn) => {
+    return axiosInstance.delete(`/${isbn}`);
+}

@@ -105,8 +105,6 @@ const Home = () => {
     const [anchorEl, setAnchorEl] = useState(null);
     const navigate = useNavigate(); // Use useNavigate instead of useHistory
 
-
-
     const storedBooks = useSelector((state) => state.books.books);
 
     useEffect(() => {

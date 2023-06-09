@@ -86,7 +86,9 @@ export default function UserPage() {
 
   const [filterName, setFilterName] = useState('');
 
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
+
 
   const handleOpenMenu = (event) => {
     setOpen(event.currentTarget);
@@ -166,7 +168,7 @@ export default function UserPage() {
           <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
 
           <Scrollbar>
-            <TableContainer sx={{ minWidth: 800 }}>
+            <TableContainer sx={{ minWidth: 800 , paddingBottom:20}}>
               <Table>
                 <UserListHead
                   order={order}

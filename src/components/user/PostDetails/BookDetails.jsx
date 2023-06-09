@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 import { useParams, Link  } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate instead of useHistory
-import { getBook, getBooksBySearch } from '../../../actions/books'; // Updated import
+import { getBookById } from '../../../actions/books'; // Updated import
 import CommentSection from './CommentSection';
 import useStyles from './styles';
 import {AddToPhotos} from "@mui/icons-material";
@@ -21,14 +21,14 @@ const BookDetails = () => {
   useEffect(() => {
     console.log('use effect')
     console.log('id ', id)
-    dispatch(getBook(id));
+    dispatch(getBookById(id));
   }, [id]);
 
-  useEffect(() => {
-    if (book) {
-      dispatch(getBooksBySearch({ search: 'none', tags: book?.tags?.join(',') }));
-    }
-  }, [book]);
+  // useEffect(() => {
+  //   if (book) {
+  //     dispatch(getBooksBySearch({ search: 'none', tags: book?.tags?.join(',') }));
+  //   }
+  // }, [book]);
 
 
   // if (!book) return null;
