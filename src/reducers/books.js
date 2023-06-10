@@ -1,9 +1,9 @@
 import {
     FETCH_ALL,
     FETCH_BOOK_BY_ID,
-    FETCH_BY_SEARCH,
-    LIKE,
-    COMMENT,
+    // FETCH_BY_SEARCH,
+    // LIKE,
+    // COMMENT,
     SET_BOOKS,
     SELECT_BOOK,
     CREATE_BOOK,
@@ -24,7 +24,7 @@ const bookReducer = (state = initialState, action) => {
         case FETCH_ALL:
             return {
                 ...state,
-                books: action.payload.data,
+                books: action.payload,
             };
         case FETCH_BOOK_BY_ID:
             return {
