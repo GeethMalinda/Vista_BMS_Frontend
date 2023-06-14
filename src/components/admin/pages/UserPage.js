@@ -1,7 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 import { filter } from 'lodash';
 import { sentenceCase } from 'change-case';
-import { useState } from 'react';
+import {useEffect, useState} from 'react';
 // @mui
 import {
   Card,
@@ -28,17 +28,24 @@ import Iconify from '../components/iconify';
 import Scrollbar from '../components/scrollbar';
 // sections
 import { UserListHead, UserListToolbar } from '../sections/@dashboard/user';
-// mock
-import USERLIST from '../_mock/user';
+import {useDispatch, useSelector} from "react-redux";
+import {deleteBook, getBooks} from "../../../actions/books";
+import {Dialog, DialogActions, DialogContent, DialogTitle, TextField} from "@material-ui/core";
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Name', alignRight: false },
-  { id: 'company', label: 'Company', alignRight: false },
-  { id: 'role', label: 'Role', alignRight: false },
-  { id: 'isVerified', label: 'Verified', alignRight: false },
+  { id: 'isbn', label: 'ISBN', alignRight: false },
+  { id: 'name', label: 'Book Title', alignRight: false },
+  { id: 'author', label: 'Author', alignRight: false },
+  { id: 'publisher', label: 'Publisher', alignRight: false },
+  { id: 'language', label: 'Language', alignRight: false },
+  { id: 'pages', label: 'Pages', alignRight: false },
+  { id: 'publication_date', label: 'Pub. Date', alignRight: false },
   { id: 'status', label: 'Status', alignRight: false },
+  { id: 'format', label: 'Format', alignRight: false },
+  { id: 'price', label: 'Price', alignRight: false },
+  { id: 'discount', label: 'Discount', alignRight: false },
   { id: '' },
 ];
 
@@ -74,7 +81,14 @@ function applySortFilter(array, comparator, query) {
 }
 
 export default function UserPage() {
+
+  const dispatch = useDispatch();
+
+
+
   const [open, setOpen] = useState(null);
+
+  const [selectedBook, setSelectedBook] = useState(null);
 
   const [page, setPage] = useState(0);
 
@@ -88,11 +102,37 @@ export default function UserPage() {
 
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  const [selectedRow, setSelectedRow] = useState(null);
+
+  const {  books  } = useSelector((state) => state.books);
 
 
-  const handleOpenMenu = (event) => {
-    setOpen(event.currentTarget);
+  useEffect(() => {
+    dispatch(getBooks());
+  }, [dispatch, getBooks]);
+
+
+  const handleRowClick = (row) => {
+    setSelectedRow(row);
+    setDialogOpen(true);
   };
+
+  const handleCloseDialog = () => {
+    setDialogOpen(false);
+  };
+
+  const handleOpenMenu = (event, book) => {
+    setOpen(event.currentTarget);
+    setSelectedBook(book);
+    console.log('handle open ',book)
+  };
+
+  const handleDelete = (isbn) => {
+    dispatch(deleteBook(isbn));
+    setOpen(null);
+  }
 
   const handleCloseMenu = () => {
     setOpen(null);
@@ -106,18 +146,18 @@ export default function UserPage() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = USERLIST.map((n) => n.name);
+      const newSelecteds = books.map((n) => n.name);
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
+  const handleClick = (event, isbn) => {
+    const selectedIndex = selected.indexOf(isbn);
     let newSelected = [];
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
+      newSelected = newSelected.concat(selected, isbn);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -142,11 +182,15 @@ export default function UserPage() {
     setFilterName(event.target.value);
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - books.length) : 0;
 
-  const filteredUsers = applySortFilter(USERLIST, getComparator(order, orderBy), filterName);
+  // const filteredUsers = applySortFilter(BOOKLIST, getComparator(order, orderBy), filterName);
+  const filteredUsers = books ? applySortFilter(books, getComparator(order, orderBy), filterName) : [];
+
 
   const isNotFound = !filteredUsers.length && !!filterName;
+
+
 
   return (
     <>
@@ -155,6 +199,7 @@ export default function UserPage() {
       </Helmet>
 
       <Container>
+
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
             Manage Books
@@ -174,53 +219,59 @@ export default function UserPage() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={USERLIST.length}
+                  rowCount={books.length}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
                 />
+
                 <TableBody>
                   {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { id, name, role, status, company, avatarUrl, isVerified } = row;
-                    const selectedUser = selected.indexOf(name) !== -1;
+                    const { isbn, name, author, publisher, language, pages, publicationDate, status, format, price, discount } = row;
+                    const selectedBook = selected.indexOf(name) !== -1;
 
                     return (
-                      <TableRow hover key={id} tabIndex={-1} role="checkbox" selected={selectedUser}>
-                        <TableCell padding="checkbox">
-                          <Checkbox checked={selectedUser} onChange={(event) => handleClick(event, name)} />
-                        </TableCell>
+                        <TableRow hover key={isbn} tabIndex={-1} role="checkbox" selected={selectedBook} onClick={() => handleRowClick(row)}>
+                          <TableCell padding="checkbox">
+                            <Checkbox checked={selectedBook} onChange={(event) => handleClick(event, isbn)} />
+                          </TableCell>
 
-                        <TableCell component="th" scope="row" padding="none">
-                          <Stack direction="row" alignItems="center" spacing={2}>
-                            <Avatar alt={name} src={avatarUrl} />
-                            <Typography variant="subtitle2" noWrap>
-                              {name}
-                            </Typography>
-                          </Stack>
-                        </TableCell>
+                          <TableCell component="th" scope="row" padding="none">
+                            {isbn}
+                          </TableCell>
 
-                        <TableCell align="left">{company}</TableCell>
+                          <TableCell align="left">{name}</TableCell>
 
-                        <TableCell align="left">{role}</TableCell>
+                          <TableCell align="left">{author}</TableCell>
 
-                        <TableCell align="left">{isVerified ? 'Yes' : 'No'}</TableCell>
+                          <TableCell align="left">{publisher}</TableCell>
 
-                        <TableCell align="left">
-                          <Label color={(status === 'banned' && 'error') || 'success'}>{sentenceCase(status)}</Label>
-                        </TableCell>
+                          <TableCell align="left">{language}</TableCell>
 
-                        <TableCell align="right">
-                          <IconButton size="large" color="inherit" onClick={handleOpenMenu}>
-                            <Iconify icon={'eva:more-vertical-fill'} />
-                          </IconButton>
-                        </TableCell>
-                      </TableRow>
+                          <TableCell align="left">{pages}</TableCell>
+
+                          <TableCell align="left">{publicationDate}</TableCell>
+
+                          <TableCell align="left">{status}</TableCell>
+
+                          <TableCell align="left">{format}</TableCell>
+
+                          <TableCell align="left">{price}</TableCell>
+
+                          <TableCell align="left">{discount}</TableCell>
+
+                          <TableCell align="right">
+                            <IconButton size="large" color="inherit" onClick={(event) => handleOpenMenu(event, row)}>
+                              <Iconify icon={'eva:more-vertical-fill'} />
+                            </IconButton>
+                          </TableCell>
+                        </TableRow>
                     );
                   })}
                   {emptyRows > 0 && (
-                    <TableRow style={{ height: 53 * emptyRows }}>
-                      <TableCell colSpan={6} />
-                    </TableRow>
+                      <TableRow style={{ height: 53 * emptyRows }}>
+                        <TableCell colSpan={6} />
+                      </TableRow>
                   )}
                 </TableBody>
 
@@ -254,7 +305,7 @@ export default function UserPage() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={USERLIST.length}
+            count={books.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
@@ -286,11 +337,26 @@ export default function UserPage() {
           Edit
         </MenuItem>
 
-        <MenuItem sx={{ color: 'error.main' }}>
+        <MenuItem sx={{ color: 'error.main' }} onClick={() => {handleDelete(selectedBook.isbn)}}>
           <Iconify icon={'eva:trash-2-outline'} sx={{ mr: 2 }} />
           Delete
         </MenuItem>
       </Popover>
+      <Dialog open={dialogOpen} onClose={handleCloseDialog}>
+        <DialogTitle>Update User</DialogTitle>
+        <DialogContent>
+          <form>
+            <TextField margin="dense" label="Name" type="text" fullWidth value={selectedRow ? selectedRow.name : ''} />
+            <TextField margin="dense" label="Company" type="text" fullWidth value={selectedRow ? selectedRow.company : ''} />
+            <TextField margin="dense" label="Role" type="text" fullWidth value={selectedRow ? selectedRow.role : ''} />
+            {/* Add more fields as needed */}
+          </form>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog}>Cancel</Button>
+          <Button >Update</Button> {/* Implement this function to handle the update */}
+        </DialogActions>
+      </Dialog>
     </>
   );
 }
