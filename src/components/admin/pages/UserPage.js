@@ -29,8 +29,8 @@ import Scrollbar from '../components/scrollbar';
 // sections
 import { UserListHead, UserListToolbar } from '../sections/@dashboard/user';
 import {useDispatch, useSelector} from "react-redux";
-import {deleteBook, getBooks} from "../../../actions/books";
-import {Dialog, DialogActions, DialogContent, DialogTitle, TextField} from "@material-ui/core";
+import {deleteBook, getBooks , updateBook } from "../../../actions/books";
+import {Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField} from "@material-ui/core";
 
 // ----------------------------------------------------------------------
 
@@ -84,7 +84,7 @@ export default function UserPage() {
 
   const dispatch = useDispatch();
 
-
+  const [updatedBook, setUpdatedBook] = useState(null);
 
   const [open, setOpen] = useState(null);
 
@@ -113,9 +113,24 @@ export default function UserPage() {
     dispatch(getBooks());
   }, [dispatch, getBooks]);
 
+  const handleUpdateBook = () => {
+    if (updatedBook) {
+      dispatch(updateBook(selectedRow.isbn, updatedBook));
+      handleCloseDialog();
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const { id, value } = e.target;
+    setUpdatedBook((prev) => ({
+      ...prev,
+      [id]: value,
+    }));
+  };
 
   const handleRowClick = (row) => {
     setSelectedRow(row);
+    setUpdatedBook(row);
     setDialogOpen(true);
   };
 
@@ -345,16 +360,33 @@ export default function UserPage() {
       <Dialog open={dialogOpen} onClose={handleCloseDialog}>
         <DialogTitle>Update User</DialogTitle>
         <DialogContent>
-          <form>
-            <TextField margin="dense" label="Name" type="text" fullWidth value={selectedRow ? selectedRow.name : ''} />
-            <TextField margin="dense" label="Company" type="text" fullWidth value={selectedRow ? selectedRow.company : ''} />
-            <TextField margin="dense" label="Role" type="text" fullWidth value={selectedRow ? selectedRow.role : ''} />
-            {/* Add more fields as needed */}
+          <form noValidate autoComplete="off">
+            <Grid container spacing={2}>
+              <Grid item xs={6}>
+                {selectedRow && <>
+                  <TextField margin="dense" id="isbn" label="ISBN" type="text" value={selectedRow.isbn} fullWidth onChange={handleInputChange} />
+                  <TextField margin="dense" id="name" label="Book Title" type="text" value={selectedRow.name} fullWidth />
+                  <TextField margin="dense" id="author" label="Author" type="text" value={selectedRow.author} fullWidth />
+                  <TextField margin="dense" id="publisher" label="Publisher" type="text" value={selectedRow.publisher} fullWidth />
+                  <TextField margin="dense" id="language" label="Language" type="text" value={selectedRow.language} fullWidth />
+                  <TextField margin="dense" id="pages" label="Pages" type="text" value={selectedRow.pages} fullWidth />
+                </>}
+              </Grid>
+              <Grid item xs={6}>
+                {selectedRow && <>
+                  <TextField margin="dense" id="publication_date" label="Pub. Date" type="text" value={selectedRow.publicationDate} fullWidth />
+                  <TextField margin="dense" id="status" label="Status" type="text" value={selectedRow.status} fullWidth />
+                  <TextField margin="dense" id="format" label="Format" type="text" value={selectedRow.format} fullWidth />
+                  <TextField margin="dense" id="price" label="Price" type="text" value={selectedRow.price} fullWidth />
+                  <TextField margin="dense" id="discount" label="Discount" type="text" value={selectedRow.discount} fullWidth />
+                </>}
+              </Grid>
+            </Grid>
           </form>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseDialog}>Cancel</Button>
-          <Button >Update</Button> {/* Implement this function to handle the update */}
+          <Button onClick={handleUpdateBook}>Update</Button>
         </DialogActions>
       </Dialog>
     </>
