@@ -364,12 +364,12 @@ export default function UserPage() {
             <Grid container spacing={2}>
               <Grid item xs={6}>
                 {selectedRow && <>
-                  <TextField margin="dense" id="isbn" label="ISBN" type="text" value={selectedRow.isbn} fullWidth onChange={handleInputChange} />
-                  <TextField margin="dense" id="name" label="Book Title" type="text" value={selectedRow.name} fullWidth />
-                  <TextField margin="dense" id="author" label="Author" type="text" value={selectedRow.author} fullWidth />
-                  <TextField margin="dense" id="publisher" label="Publisher" type="text" value={selectedRow.publisher} fullWidth />
-                  <TextField margin="dense" id="language" label="Language" type="text" value={selectedRow.language} fullWidth />
-                  <TextField margin="dense" id="pages" label="Pages" type="text" value={selectedRow.pages} fullWidth />
+                  <TextField margin="dense" id="isbn" label="ISBN" type="text" value={selectedRow?.isbn || ''} fullWidth onChange={handleInputChange} />
+                  <TextField margin="dense" id="name" label="Book Title" type="text" value={selectedRow?.name || ''} fullWidth onChange={handleInputChange} />
+                  <TextField margin="dense" id="author" label="Author" type="text" value={selectedRow?.author || ''} fullWidth onChange={handleInputChange} />
+                  <TextField margin="dense" id="publisher" label="Publisher" type="text" value={selectedRow?.publisher || ''} fullWidth onChange={handleInputChange} />
+                  <TextField margin="dense" id="language" label="Language" type="text" value={selectedRow?.language || ''} fullWidth onChange={handleInputChange} />
+                  <TextField margin="dense" id="pages" label="Pages" type="text" value={selectedRow?.pages || ''} fullWidth onChange={handleInputChange} />
                 </>}
               </Grid>
               <Grid item xs={6}>
