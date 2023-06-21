@@ -29,7 +29,7 @@ import Scrollbar from '../components/scrollbar';
 // sections
 import { UserListHead, UserListToolbar } from '../sections/@dashboard/user';
 import {useDispatch, useSelector} from "react-redux";
-import {deleteBook, getBooks , updateBook } from "../../../actions/books";
+import {createBook, deleteBook, getBooks, updateBook} from "../../../actions/books";
 import {Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField} from "@material-ui/core";
 
 // ----------------------------------------------------------------------
@@ -135,6 +135,8 @@ export default function UserPage() {
     }
   };
 
+
+
   const handleInputChange = (e) => {
     const { id, value } = e.target;
     setUpdatedBook((prev) => ({
@@ -152,8 +154,24 @@ export default function UserPage() {
   };
 
   const handleNewBookSubmit = () => {
-    setNewBookDialogOpen(false)
-  }
+    if(newBook) {
+      dispatch(createBook(newBook));
+      setNewBookDialogOpen(false);
+      setNewBook({
+        isbn: '',
+        name: '',
+        author: '',
+        publisher: '',
+        language: '',
+        pages: '',
+        publicationDate: '',
+        status: '',
+        format: '',
+        price: '',
+        discount: '',
+      })
+    }
+  };
 
   const handleRowClick = (row) => {
     setSelectedRow(row);
