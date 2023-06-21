@@ -84,7 +84,7 @@ export default function UserPage() {
 
   const dispatch = useDispatch();
 
-  const [updatedBook, setUpdatedBook] = useState(null);
+  const [updatedBook, setUpdatedBook] = useState({});
 
   const [open, setOpen] = useState(null);
 
@@ -108,10 +108,25 @@ export default function UserPage() {
 
   const {  books  } = useSelector((state) => state.books);
 
+  const [newBookDialogOpen, setNewBookDialogOpen] = useState(false);
+
+  const [newBook, setNewBook] = useState({
+    isbn: '',
+    name: '',
+    author: '',
+    publisher: '',
+    language: '',
+    pages: '',
+    publicationDate: '',
+    status: '',
+    format: '',
+    price: '',
+    discount: '',
+  });
 
   useEffect(() => {
     dispatch(getBooks());
-  }, [dispatch, getBooks]);
+  }, [dispatch]);
 
   const handleUpdateBook = () => {
     if (updatedBook) {
@@ -127,6 +142,18 @@ export default function UserPage() {
       [id]: value,
     }));
   };
+
+  const handleNewBookChange = (e) => {
+    const { id , value } = e.target;
+    setNewBook((prevState => ({
+      ...prevState,
+      [id]:value,
+    })));
+  };
+
+  const handleNewBookSubmit = () => {
+    setNewBookDialogOpen(false)
+  }
 
   const handleRowClick = (row) => {
     setSelectedRow(row);
@@ -197,13 +224,13 @@ export default function UserPage() {
     setFilterName(event.target.value);
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - books.length) : 0;
+  const emptyRows = rowsPerPage - Math.min(rowsPerPage, books.length - page * rowsPerPage);
+
 
   // const filteredUsers = applySortFilter(BOOKLIST, getComparator(order, orderBy), filterName);
-  const filteredUsers = books ? applySortFilter(books, getComparator(order, orderBy), filterName) : [];
+  const filteredUsers = applySortFilter(books ? books : [], getComparator(order, orderBy), filterName);
 
-
-  const isNotFound = !filteredUsers.length && !!filterName;
+  const isNotFound = filteredUsers.length === 0 && filterName;
 
 
 
@@ -219,7 +246,8 @@ export default function UserPage() {
           <Typography variant="h4" gutterBottom>
             Manage Books
           </Typography>
-          <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
+          {/* UPDATED: Add an onClick handler to open the new book dialog */}
+          <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={() => setNewBookDialogOpen(true)}>
             New Book
           </Button>
         </Stack>
@@ -364,21 +392,21 @@ export default function UserPage() {
             <Grid container spacing={2}>
               <Grid item xs={6}>
                 {selectedRow && <>
-                  <TextField margin="dense" id="isbn" label="ISBN" type="text" value={selectedRow?.isbn || ''} fullWidth onChange={handleInputChange} />
-                  <TextField margin="dense" id="name" label="Book Title" type="text" value={selectedRow?.name || ''} fullWidth onChange={handleInputChange} />
-                  <TextField margin="dense" id="author" label="Author" type="text" value={selectedRow?.author || ''} fullWidth onChange={handleInputChange} />
-                  <TextField margin="dense" id="publisher" label="Publisher" type="text" value={selectedRow?.publisher || ''} fullWidth onChange={handleInputChange} />
-                  <TextField margin="dense" id="language" label="Language" type="text" value={selectedRow?.language || ''} fullWidth onChange={handleInputChange} />
-                  <TextField margin="dense" id="pages" label="Pages" type="text" value={selectedRow?.pages || ''} fullWidth onChange={handleInputChange} />
+                  <TextField margin="dense" id="isbn" label="ISBN" type="text" value={updatedBook?.isbn || ''} fullWidth onChange={handleInputChange} />
+                  <TextField margin="dense" id="name" label="Book Title" type="text" value={updatedBook?.name || ''} fullWidth onChange={handleInputChange} />
+                  <TextField margin="dense" id="author" label="Author" type="text" value={updatedBook?.author || ''} fullWidth onChange={handleInputChange} />
+                  <TextField margin="dense" id="publisher" label="Publisher" type="text" value={updatedBook?.publisher || ''} fullWidth onChange={handleInputChange} />
+                  <TextField margin="dense" id="language" label="Language" type="text" value={updatedBook?.language || ''} fullWidth onChange={handleInputChange} />
+                  <TextField margin="dense" id="pages" label="Pages" type="text" value={updatedBook?.pages || ''} fullWidth onChange={handleInputChange} />
                 </>}
               </Grid>
               <Grid item xs={6}>
                 {selectedRow && <>
-                  <TextField margin="dense" id="publication_date" label="Pub. Date" type="text" value={selectedRow.publicationDate} fullWidth />
-                  <TextField margin="dense" id="status" label="Status" type="text" value={selectedRow.status} fullWidth />
-                  <TextField margin="dense" id="format" label="Format" type="text" value={selectedRow.format} fullWidth />
-                  <TextField margin="dense" id="price" label="Price" type="text" value={selectedRow.price} fullWidth />
-                  <TextField margin="dense" id="discount" label="Discount" type="text" value={selectedRow.discount} fullWidth />
+                  <TextField margin="dense" id="publication_date" label="Pub. Date" type="text" value={updatedBook?.publicationDate || ''} fullWidth onChange={handleInputChange} />
+                  <TextField margin="dense" id="status" label="Status" type="text" value={updatedBook?.status || ''} fullWidth onChange={handleInputChange} />
+                  <TextField margin="dense" id="format" label="Format" type="text" value={updatedBook?.format || ''} fullWidth onChange={handleInputChange} />
+                  <TextField margin="dense" id="price" label="Price" type="text" value={updatedBook?.price || ''} fullWidth onChange={handleInputChange} />
+                  <TextField margin="dense" id="discount" label="Discount" type="text" value={updatedBook?.discount || ''} fullWidth onChange={handleInputChange} />
                 </>}
               </Grid>
             </Grid>
@@ -387,6 +415,38 @@ export default function UserPage() {
         <DialogActions>
           <Button onClick={handleCloseDialog}>Cancel</Button>
           <Button onClick={handleUpdateBook}>Update</Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog open={newBookDialogOpen} onClose={() => setNewBookDialogOpen(false)}>
+        <DialogTitle>Add New Book</DialogTitle>
+        <DialogContent>
+          <form noValidate autoComplete="off">
+            <Grid container spacing={2}>
+              <Grid item xs={6}>
+                <TextField margin="dense" id="isbn" label="ISBN" type="text" value={newBook.isbn} fullWidth onChange={handleNewBookChange} />
+                <TextField margin="dense" id="name" label="Book Title" type="text" value={newBook.name} fullWidth onChange={handleNewBookChange} />
+                <TextField margin="dense" id="author" label="Author" type="text" value={newBook.author} fullWidth onChange={handleNewBookChange} />
+                <TextField margin="dense" id="publisher" label="Publisher" type="text" value={newBook.publisher} fullWidth onChange={handleNewBookChange} />
+                <TextField margin="dense" id="language" label="Language" type="text" value={newBook.language} fullWidth onChange={handleNewBookChange} />
+                <TextField margin="dense" id="pages" label="Pages" type="text" value={newBook.pages} fullWidth onChange={handleNewBookChange} />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField margin="dense" id="publication_date" label="Pub. Date" type="text" value={newBook.publicationDate} fullWidth onChange={handleNewBookChange} />
+                <TextField margin="dense" id="status" label="Status" type="text" value={newBook.status} fullWidth onChange={handleNewBookChange} />
+                <TextField margin="dense" id="format" label="Format" type="text" value={newBook.format} fullWidth onChange={handleNewBookChange} />
+                <TextField margin="dense" id="price" label="Price" type="text" value={newBook.price} fullWidth onChange={handleNewBookChange} />
+                <TextField margin="dense" id="discount" label="Discount" type="text" value={newBook.discount} fullWidth onChange={handleNewBookChange} />
+              </Grid>
+            </Grid>
+          </form>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setNewBookDialogOpen(false)} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleNewBookSubmit} color="primary">
+            Add Book
+          </Button>
         </DialogActions>
       </Dialog>
     </>
