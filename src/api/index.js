@@ -32,6 +32,10 @@ export const getBookByIsbn = (isbn) => {
     return axiosInstance.get(`/${isbn}`);
 }
 
+export const getBooksByCategory = (category) => {
+    return axiosInstance.get(`/category/${category}`);
+}
+
 export const createBook = (book) => {
     return axiosInstance.post('/', book);
 }

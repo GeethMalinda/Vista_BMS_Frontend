@@ -9,7 +9,12 @@ import {
     FETCH_BOOK_BY_ID,
     CREATE_BOOK,
     UPDATE_BOOK,
-    DELETE_BOOK
+    DELETE_BOOK,
+    CATEGORY_FICTION,
+    CATEGORY_NONFICTION,
+    CATEGORY_KIDS,
+    CATEGORY_SCIENCE_TECHNOLOGY,
+    CATEGORY_GRAPHIC_NOVELS_COMICS, CATEGORY_POETRY
 } from '../variables/constants/actionTypes';
 
 import * as api from '../api/index';
@@ -47,6 +52,40 @@ export const getBooks = () => async (dispatch) => {
         const { data } = await api.getAllBooks();
 
         dispatch({ type: FETCH_ALL, payload: data });
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+export const getBookByCategory = (category) => async(dispatch) => {
+    try {
+        let categoryConstant = '';
+        switch (category) {
+            case 'Fiction':
+                categoryConstant = CATEGORY_FICTION;
+                break;
+            case 'Nonfiction':
+                categoryConstant = CATEGORY_NONFICTION;
+                break;
+            case 'Kids':
+                categoryConstant = CATEGORY_KIDS;
+                break;
+            case 'Science & Technology':
+                categoryConstant = CATEGORY_SCIENCE_TECHNOLOGY;
+                break;
+            case 'Graphic Novels & Comics':
+                categoryConstant = CATEGORY_GRAPHIC_NOVELS_COMICS;
+                break;
+            case 'Poetry':
+                categoryConstant = CATEGORY_POETRY;
+                break;
+            default:
+                throw new Error(`Unknown category: ${category}`);
+        }
+
+        const { data } = await api.getBooksByCategory(category);
+
+        dispatch({ type: categoryConstant, payload: { data: data } });
     } catch (error) {
         console.log(error.message);
     }

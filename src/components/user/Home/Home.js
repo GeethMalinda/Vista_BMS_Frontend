@@ -64,7 +64,8 @@ const Home = () => {
     };
 
     const handleCategoryClick = (category) => {
-        setClickedCategory((prevCategory) => (prevCategory === category ? "" : category));
+        console.log(category);
+        setClickedCategory(category);
     };
 
     useEffect(() => {
@@ -150,30 +151,39 @@ const Home = () => {
                                 </Button>
                                 <Button
                                     className={classes.appBarButton}
-                                    onClick={() => handleCategoryClick("Travel")}
+                                    onClick={() => handleCategoryClick("Kids")}
                                     style={{
-                                        color: clickedCategory === "Travel" ? "#00FF00" : "",
+                                        color: clickedCategory === "Kids" ? "#00FF00" : "",
                                     }}
                                 >
-                                    Travel
+                                   Kids
                                 </Button>
                                 <Button
                                     className={classes.appBarButton}
-                                    onClick={() => handleCategoryClick("Sinhala")}
+                                    onClick={() => handleCategoryClick("Science & Technology")}
                                     style={{
-                                        color: clickedCategory === "Sinhala" ? "#00FF00" : "",
+                                        color: clickedCategory === "Science & Technology" ? "#00FF00" : "",
                                     }}
                                 >
-                                    Sinhala
+                                    Science & Technology
                                 </Button>
                                 <Button
                                     className={classes.appBarButton}
-                                    onClick={() => handleCategoryClick("Other")}
+                                    onClick={() => handleCategoryClick("Graphic Novels & Comics")}
                                     style={{
-                                        color: clickedCategory === "Other" ? "#00FF00" : "",
+                                        color: clickedCategory === "Graphic Novels & Comics" ? "#00FF00" : "",
                                     }}
                                 >
-                                    Other
+                                    Graphic Novels & Comics
+                                </Button>
+                                <Button
+                                    className={classes.appBarButton}
+                                    onClick={() => handleCategoryClick("Poetry")}
+                                    style={{
+                                        color: clickedCategory === "Poetry" ? "#00FF00" : "",
+                                    }}
+                                >
+                                    Poetry
                                 </Button>
                             </div>
 
@@ -218,8 +228,6 @@ const Home = () => {
                         ))}
                     </Grid>
                 </Container>
-
-
             </Container>
         </>
     );
