@@ -18,34 +18,6 @@ import {
 } from '../variables/constants/actionTypes';
 
 import * as api from '../api/index';
-// Dummy data
-const dummyData = [
-    {
-        _id: '1',
-        title: 'Dummy Title 1',
-        message: 'Dummy Message 1',
-        name: 'Dummy Name 1',
-        creator: 'Dummy Creator 1',
-        createdAt: new Date(),
-        comments: [],
-        likes: [],
-        tags: ['tag1', 'tag2'],
-        selectedFile: 'https://via.placeholder.com/150',
-    },
-    {
-        _id: '2',
-        title: 'Dummy Title 2',
-        message: 'Dummy Message 2',
-        name: 'Dummy Name 2',
-        creator: 'Dummy Creator 2',
-        createdAt: new Date(),
-        comments: [],
-        likes: [],
-        tags: ['tag3', 'tag4'],
-        selectedFile: 'https://via.placeholder.com/150',
-    },
-];
-
 
 export const getBooks = () => async (dispatch) => {
     try {
@@ -83,9 +55,9 @@ export const getBookByCategory = (category) => async(dispatch) => {
                 throw new Error(`Unknown category: ${category}`);
         }
 
-        const { data } = await api.getBooksByCategory(category);
-
-        dispatch({ type: categoryConstant, payload: { data: data } });
+        const { data } = await api.getBooksByCategory(categoryConstant);
+        console.log('data ==> ',data)
+        dispatch({ type: FETCH_ALL, payload: data });
     } catch (error) {
         console.log(error.message);
     }

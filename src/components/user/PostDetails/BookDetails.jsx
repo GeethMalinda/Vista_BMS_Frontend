@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, {useEffect, useState} from 'react';
 import { Paper, Typography, CircularProgress, Divider ,Button } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
@@ -8,10 +8,12 @@ import { getBookById } from '../../../actions/books'; // Updated import
 import CommentSection from './CommentSection';
 import useStyles from './styles';
 import {AddToPhotos} from "@mui/icons-material";
+import {Rating} from "@mui/material";
 
 //This is my bookdetails panel
 const BookDetails = () => {
   const { selectedBook: book, books } = useSelector((state) => state.books);
+  const [rating, setRating] = useState(2.5);
   const dispatch = useDispatch();
   const navigate = useNavigate(); // Use useNavigate instead of useHistory
 
@@ -19,8 +21,6 @@ const BookDetails = () => {
   const { id } = useParams();
 
   useEffect(() => {
-    console.log('use effect')
-    console.log('id ', id)
     dispatch(getBookById(id));
   }, [id]);
 
@@ -30,16 +30,25 @@ const BookDetails = () => {
   //   }
   // }, [book]);
 
-
   // if (!book) return null;
 
 /*
   const openPost = (_id) => history.push(`/posts/${_id}`);
 */
+
   const openPost = (_id) => {
     navigate(`/customer/book/${_id}`);
-    console.log(_id)
   }
+
+  const handleRatingChange = (event, newRating) => {
+    setRating(newRating);
+  };
+
+  const handleSubmit = () => {
+    console.log(rating);
+  };
+
+
 
   if (!book) {
     return (
@@ -77,23 +86,34 @@ const BookDetails = () => {
                $ {` ${book.price}`}
               </Link>
             </Typography>
-            <Divider style={{ margin: '20px 0' }} />
-            {/*<Typography variant="body1"><strong>Realtime Chat - coming soon!</strong></Typography>*/}
-            <Button variant="contained" raised color="primary">
-              <AddToPhotos />
-              Add to cart
-            </Button>
-            <Divider style={{ margin: '20px 0' }} />
-            <CommentSection book={book} />
+
+
             <Divider style={{ margin: '20px 0' }} />
             <Typography variant="h6"><strong>More Informations </strong></Typography>
             <Typography variant="body1"><strong>Language</strong></Typography>
             <Typography variant="body1"><strong>Publisher</strong></Typography>
             <Typography variant="body1"><strong>ISBN</strong></Typography>
             <Typography variant="body1"><strong>Pages</strong></Typography>
+            <Divider style={{ margin: '20px 0' }} />
+            {/*<Typography variant="body1"><strong>Realtime Chat - coming soon!</strong></Typography>*/}
+            <Button variant="contained" raised color="primary">
+              <AddToPhotos />
+              Add to cart
+            </Button>
+
+            <Divider style={{ margin: '20px 0' }} />
+            <CommentSection book={book} />
+
           </div>
           <div className={classes.imageSection}>
-            <img className={classes.media} src={book.image || 'https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png'} alt={book.title} />
+            <img className={classes.media}
+                 src={book.image || 'https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png'}
+                 alt={book.title} />
+            <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', marginTop: '10px' }}>
+              <Typography variant="h6" style={{ fontWeight: 'bold' }}>What is your rate?</Typography>
+              <Rating name="half-rating" defaultValue={2.5} precision={0.5} onChange={handleRatingChange} />
+              <Button  onClick={handleSubmit} variant="contained" color="inherit" style={{ backgroundColor: '#FFC107', color: '#212B36', marginTop: '10px',fontWeight: 'bold'}}>Submit</Button>
+            </div>
           </div>
         </div>
         {recommendedPosts && recommendedPosts.length > 0 && (

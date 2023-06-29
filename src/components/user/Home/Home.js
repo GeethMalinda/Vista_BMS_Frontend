@@ -22,7 +22,7 @@ import {useDispatch} from "react-redux";
 import {selectBook, setBooks} from "../../../actions/books";
 import { useSelector } from 'react-redux';
 import Navbar from "../navbar/Navbar";
-import {getBooks} from "../../../actions/books";
+import {getBooks , getBookByCategory} from "../../../actions/books";
 
 
 //this is the home menu
@@ -47,6 +47,7 @@ const Home = () => {
     };
 
     const handleCardClick = (book) => {
+        console.log('book',book)
         dispatch(selectBook(book));
         navigate(`/customer/book/${book.id}`);
     };
@@ -66,6 +67,7 @@ const Home = () => {
     const handleCategoryClick = (category) => {
         console.log(category);
         setClickedCategory(category);
+        dispatch(getBookByCategory(category));
     };
 
     useEffect(() => {
@@ -186,7 +188,6 @@ const Home = () => {
                                     Poetry
                                 </Button>
                             </div>
-
                         </div>
                     </Toolbar>
                 </AppBar>
