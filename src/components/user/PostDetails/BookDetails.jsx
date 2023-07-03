@@ -48,8 +48,6 @@ const BookDetails = () => {
     console.log(rating);
   };
 
-
-
   if (!book) {
     return (
         <Paper elevation={6} className={classes.loadingPaper}>
@@ -103,19 +101,35 @@ const BookDetails = () => {
 
             <Divider style={{ margin: '20px 0' }} />
             <CommentSection book={book} />
+            <Divider style={{ margin: '20px 0' }} />
+            <div style={{ display: 'flex', alignItems: 'center', marginTop: '30px' }}>
+              <Typography variant="h6" style={{ marginRight:'70px' }} >What is your rate?</Typography>
 
+              <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'center' ,alignItems:'center'}}>
+                <Rating name="half-rating"
+                        defaultValue={2.5}
+                        precision={0.5}
+                        onChange={handleRatingChange}
+                        style={{ marginTop: '10px'}} />
+
+                <Button onClick={handleSubmit}
+                        variant="contained"
+                        color="inherit"
+                        style={{ backgroundColor: '#FFC107', color: '#212B36', marginTop: '10px',fontWeight: 'bold'}}>Submit</Button>
+
+              </div>
+
+            </div>
           </div>
           <div className={classes.imageSection}>
             <img className={classes.media}
-                 src={book.image || 'https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png'}
+                 src={book.imageURL || 'https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png'}
                  alt={book.title} />
-            <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', marginTop: '10px' }}>
-              <Typography variant="h6" style={{ fontWeight: 'bold' }}>What is your rate?</Typography>
-              <Rating name="half-rating" defaultValue={2.5} precision={0.5} onChange={handleRatingChange} />
-              <Button  onClick={handleSubmit} variant="contained" color="inherit" style={{ backgroundColor: '#FFC107', color: '#212B36', marginTop: '10px',fontWeight: 'bold'}}>Submit</Button>
-            </div>
+
           </div>
         </div>
+        <Divider style={{ margin: '20px 0' }} />
+
         {recommendedPosts && recommendedPosts.length > 0 && (
             <div className={classes.section}>
               <Typography gutterBottom variant="h5">You might also like:</Typography>

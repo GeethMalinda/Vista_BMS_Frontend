@@ -46,8 +46,9 @@
     "redux": "^4.2.1",
     "redux-thunk": "^2.4.2",
     "simplebar-react": "^3.2.1",
-    "web-vitals": "^3.3.1"
-
+    "web-vitals": "^3.3.1",
+    "react-material-file-upload": "0.0.4",
+    "react-mui-fileuploader": "0.1.2"
   },
   "browserslist": {
     "production": [

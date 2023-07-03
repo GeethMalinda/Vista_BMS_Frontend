@@ -2,6 +2,8 @@ import { Helmet } from 'react-helmet-async';
 import { filter } from 'lodash';
 import { sentenceCase } from 'change-case';
 import {useEffect, useState} from 'react';
+import FileUpload from "react-material-file-upload";
+
 // @mui
 import {
   Card,
@@ -30,7 +32,16 @@ import Scrollbar from '../components/scrollbar';
 import { UserListHead, UserListToolbar } from '../sections/@dashboard/user';
 import {useDispatch, useSelector} from "react-redux";
 import {createBook, deleteBook, getBooks, updateBook} from "../../../actions/books";
-import {Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField} from "@material-ui/core";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle, FormControl,
+  FormControlLabel,
+  Grid, InputLabel, Select,
+  Switch,
+  TextField
+} from "@material-ui/core";
 
 // ----------------------------------------------------------------------
 
@@ -122,11 +133,26 @@ export default function UserPage() {
     format: '',
     price: '',
     discount: '',
+
   });
+
+  const [bookFormat, setBookFormat] = useState('Book');
+  const [eBookFile, setEbookFile] = useState(null);
+
+  const [bookCoverFile, setBookCoverFile] = useState([]);
+
+  const handleEbookFileChange = (e) => {
+    setEbookFile(e.target.files[0]);
+  };
+
 
   useEffect(() => {
     dispatch(getBooks());
   }, [dispatch]);
+
+  const handleBookFormatChange = (event) => {
+    setBookFormat(event.target.value);
+  };
 
   const handleUpdateBook = () => {
     if (updatedBook) {
@@ -134,8 +160,6 @@ export default function UserPage() {
       handleCloseDialog();
     }
   };
-
-
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
@@ -153,25 +177,27 @@ export default function UserPage() {
     })));
   };
 
-  const handleNewBookSubmit = () => {
-    if(newBook) {
-      dispatch(createBook(newBook));
-      setNewBookDialogOpen(false);
-      setNewBook({
-        isbn: '',
-        name: '',
-        author: '',
-        publisher: '',
-        language: '',
-        pages: '',
-        publicationDate: '',
-        status: '',
-        format: '',
-        price: '',
-        discount: '',
-      })
-    }
-  };
+  // const handleNewBookSubmit = () => {
+  //   if(newBook) {
+  //     dispatch(createBook(newBook));
+  //     setNewBookDialogOpen(false);
+  //     setNewBook({
+  //       isbn: '',
+  //       name: '',
+  //       author: '',
+  //       publisher: '',
+  //       language: '',
+  //       pages: '',
+  //       publicationDate: '',
+  //       status: '',
+  //       format: '',
+  //       price: '',
+  //       discount: '',
+  //     })
+  //     setBookFormat('');  // reset book format state
+  //
+  //   }
+  // };
 
   const handleRowClick = (row) => {
     setSelectedRow(row);
@@ -240,6 +266,11 @@ export default function UserPage() {
   const handleFilterByName = (event) => {
     setPage(0);
     setFilterName(event.target.value);
+  };
+
+
+  const handleIsEBookSwitch = (event) => {
+    setIsEBook(event.target.checked);
   };
 
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, books.length - page * rowsPerPage);
@@ -451,10 +482,78 @@ export default function UserPage() {
               <Grid item xs={6}>
                 <TextField margin="dense" id="publication_date" label="Pub. Date" type="text" value={newBook.publicationDate} fullWidth onChange={handleNewBookChange} />
                 <TextField margin="dense" id="status" label="Status" type="text" value={newBook.status} fullWidth onChange={handleNewBookChange} />
-                <TextField margin="dense" id="format" label="Format" type="text" value={newBook.format} fullWidth onChange={handleNewBookChange} />
+                <FormControl margin="dense" fullWidth>
+                  <InputLabel id="format-label">Format</InputLabel>
+                  <Select
+                      labelId="format-label"
+                      id="format"
+                      value={bookFormat}
+                      onChange={handleBookFormatChange}
+                  >
+                    <MenuItem value={'Book'}>Book</MenuItem>
+                    <MenuItem value={'Ebook'}>Ebook</MenuItem>
+                  </Select>
+                </FormControl>
                 <TextField margin="dense" id="price" label="Price" type="text" value={newBook.price} fullWidth onChange={handleNewBookChange} />
                 <TextField margin="dense" id="discount" label="Discount" type="text" value={newBook.discount} fullWidth onChange={handleNewBookChange} />
               </Grid>
+              <Grid item xs={12} container direction="column" justify="center" alignItems="center">
+
+                {bookFormat === 'Ebook' && (
+                    <>
+                      <Typography variant="h6" style={{ marginTop: '20px' }}>Ebook Upload</Typography>
+                      <FileUpload
+                          value={eBookFile}
+                          onChange={setEbookFile}
+                          multiple={false}
+                          rightLabel="to select file"
+                          buttonLabel="Upload E-book"
+                          buttonRemoveLabel="Remove file"
+                          maxFileSize={10}
+                          maxUploadFiles={1}
+                          bannerProps={{ elevation: 0, variant: "outlined" }}
+                          containerProps={{ elevation: 0, variant: "outlined" }}
+                          accept=".pdf,.epub"
+                      />
+
+                      <Typography variant="h6" style={{ marginTop: '20px' }}>Book Cover Upload</Typography>
+                      <FileUpload
+                          value={bookCoverFile}
+                          onChange={setBookCoverFile}
+                          multiple={false}
+                          rightLabel="to select file"
+                          buttonLabel="Upload Cover"
+                          buttonRemoveLabel="Remove file"
+                          maxFileSize={10}
+                          maxUploadFiles={1}
+                          bannerProps={{ elevation: 0, variant: "outlined" }}
+                          containerProps={{ elevation: 0, variant: "outlined" }}
+                          accept=".jpg,.png"  // assuming covers are images
+                      />
+                    </>
+                )}
+
+                {bookFormat === 'Book' && (
+                    <>
+                      <Typography variant="h6" style={{ marginTop: '20px' }}>Book Cover Upload</Typography>
+                      <FileUpload
+                          value={bookCoverFile}
+                          onChange={setBookCoverFile}
+                          multiple={false}
+                          rightLabel="to select file"
+                          buttonLabel="Upload Cover"
+                          buttonRemoveLabel="Remove file"
+                          maxFileSize={10}
+                          maxUploadFiles={1}
+                          bannerProps={{ elevation: 0, variant: "outlined" }}
+                          containerProps={{ elevation: 0, variant: "outlined" }}
+                          accept=".jpg,.png"  // assuming covers are images
+                      />
+                    </>
+                )}
+
+              </Grid>
+
             </Grid>
           </form>
         </DialogContent>
