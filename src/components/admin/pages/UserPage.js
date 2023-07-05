@@ -177,27 +177,30 @@ export default function UserPage() {
     })));
   };
 
-  // const handleNewBookSubmit = () => {
-  //   if(newBook) {
-  //     dispatch(createBook(newBook));
-  //     setNewBookDialogOpen(false);
-  //     setNewBook({
-  //       isbn: '',
-  //       name: '',
-  //       author: '',
-  //       publisher: '',
-  //       language: '',
-  //       pages: '',
-  //       publicationDate: '',
-  //       status: '',
-  //       format: '',
-  //       price: '',
-  //       discount: '',
-  //     })
-  //     setBookFormat('');  // reset book format state
-  //
-  //   }
-  // };
+  const handleNewBookSubmit = () => {
+    if(newBook) {
+      console.log(eBookFile)
+      console.log(bookCoverFile)
+      dispatch(createBook(newBook));
+      setNewBookDialogOpen(false);
+      setNewBook({
+        isbn: '',
+        name: '',
+        author: '',
+        publisher: '',
+        language: '',
+        pages: '',
+        publicationDate: '',
+        status: '',
+        format: '',
+        price: '',
+        discount: '',
+      })
+      setBookFormat('');  // reset book format state
+
+    }
+  };
+
 
   const handleRowClick = (row) => {
     setSelectedRow(row);
