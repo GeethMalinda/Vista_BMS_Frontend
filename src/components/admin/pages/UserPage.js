@@ -139,12 +139,11 @@ export default function UserPage() {
   const [bookFormat, setBookFormat] = useState('Book');
   const [eBookFile, setEbookFile] = useState(null);
 
-  const [bookCoverFile, setBookCoverFile] = useState([]);
+  const [bookCoverFile, setBookCoverFile] = useState(null);
 
   const handleEbookFileChange = (e) => {
     setEbookFile(e.target.files[0]);
   };
-
 
   useEffect(() => {
     dispatch(getBooks());
@@ -179,9 +178,7 @@ export default function UserPage() {
 
   const handleNewBookSubmit = () => {
     if(newBook) {
-      console.log(eBookFile)
-      console.log(bookCoverFile)
-      dispatch(createBook(newBook));
+      dispatch(createBook(newBook,bookCoverFile,eBookFile));
       setNewBookDialogOpen(false);
       setNewBook({
         isbn: '',
@@ -197,10 +194,9 @@ export default function UserPage() {
         discount: '',
       })
       setBookFormat('');  // reset book format state
-
+      setBookCoverFile(null)
     }
   };
-
 
   const handleRowClick = (row) => {
     setSelectedRow(row);
@@ -271,20 +267,16 @@ export default function UserPage() {
     setFilterName(event.target.value);
   };
 
-
   const handleIsEBookSwitch = (event) => {
     setIsEBook(event.target.checked);
   };
 
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, books.length - page * rowsPerPage);
 
-
   // const filteredUsers = applySortFilter(BOOKLIST, getComparator(order, orderBy), filterName);
   const filteredUsers = applySortFilter(books ? books : [], getComparator(order, orderBy), filterName);
 
   const isNotFound = filteredUsers.length === 0 && filterName;
-
-
 
   return (
     <>

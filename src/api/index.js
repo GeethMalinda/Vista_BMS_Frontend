@@ -36,8 +36,19 @@ export const getBooksByCategory = (category) => {
     return axiosInstance.get(`/category/${category}`);
 }
 
-export const createBook = (book) => {
-    return axiosInstance.post('/', book);
+export const createBook = (book, bookCoverFile, eBookFile) => {
+    const formData = new FormData();
+    formData.append('bookDetail', JSON.stringify(book));
+    formData.append('book', eBookFile);
+    formData.append('cover', bookCoverFile);
+
+    const config = {
+        headers: {
+            'content-type': 'multipart/form-data'
+        }
+    };
+
+    return axiosInstance.post('/', formData, config);
 }
 
 export const updateBook = (book) => {

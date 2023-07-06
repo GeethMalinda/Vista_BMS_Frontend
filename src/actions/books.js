@@ -73,9 +73,10 @@ export const getBook = (id) => async (dispatch) => {
     }
 }
 
-export const createBook = (book) => async (dispatch) => {
+export const createBook = (book, bookCoverFile, eBookFile) => async (dispatch) => {
     try {
-        const { data } = await api.createBook(book);
+
+        const { data } = await api.createBook(book, bookCoverFile[0], eBookFile[0]);
 
         dispatch({ type: CREATE_BOOK, payload: data });
     } catch (error) {
