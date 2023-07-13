@@ -13,7 +13,7 @@ import {
     ListItemIcon,
     ListItemText,
     IconButton, Menu, MenuItem,
-    ListItemSecondaryAction, Grid, Container, InputAdornment, TextField, Badge,
+    ListItemSecondaryAction, Grid, Container, InputAdornment, TextField, Badge, Dialog, DialogTitle, DialogContent,
 } from "@material-ui/core";
 import useStyles from './style';
 import {Search, ArrowDropDown, AddShoppingCart} from "@mui/icons-material";
@@ -25,7 +25,8 @@ import Navbar from "../navbar/Navbar";
 import {getBooks , getBookByCategory} from "../../../actions/books";
 import { Paper } from '@material-ui/core';
 import BookIcon from '@mui/icons-material/Book';
-
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
 
 
 
@@ -62,14 +63,39 @@ const Home = () => {
     const [appBarPosition, setAppBarPosition] = useState("relative");
     const [clickedButtons, setClickedButtons] = useState({});
     const [clickedCategory, setClickedCategory] = useState("");
+    const [cartItems, setCartItems] = useState({});
 
 
-    const handleButtonClick = (id) => {
-        setAddToCartToggled(true)
+    const handleButtonClick = (book) => {
+        setAddToCartToggled(true);
         setClickedButtons((prevState) => ({
             ...prevState,
-            [id]: !prevState[id],
+            [book.id]: !prevState[book.id],
         }));
+        setCartItems((prevState) => ({
+            ...prevState,
+            [book.id]: prevState[book.id] ? prevState[book.id] + 1 : 1,
+        }));
+    };
+
+    const handleIncrement = (id) => {
+        setCartItems((prevState) => ({
+            ...prevState,
+            [id]: prevState[id] + 1,
+        }));
+    };
+
+    const handleDecrement = (id) => {
+        if (cartItems[id] > 1) {
+            setCartItems((prevState) => ({
+                ...prevState,
+                [id]: prevState[id] - 1,
+            }));
+        } else {
+            const newCartItems = {...cartItems};
+            delete newCartItems[id];
+            setCartItems(newCartItems);
+        }
     };
 
     const handleCategoryClick = (category) => {
@@ -98,6 +124,8 @@ const Home = () => {
             window.removeEventListener("scroll", handleScroll);
         };
     }, []);
+
+    const totalItems = Object.values(cartItems).reduce((a, b) => a + b, 0);
 
     return (
         <>
@@ -236,7 +264,8 @@ const Home = () => {
                                         style={{
                                             backgroundColor: clickedButtons[book.id] ? "#00FF00" : "",
                                         }}
-                                        onClick={() => {
+                                        onClick={(event) => {
+                                            event.stopPropagation();
                                             handleButtonClick(book.id);
                                             setAnimate(true);
                                         }}
@@ -253,9 +282,33 @@ const Home = () => {
                         ))}
                     </Grid>
                 </Container>
+                <Dialog open={cartOpen} onClose={() => setCartOpen(false)} fullWidth>
+                    <DialogTitle>Shopping Cart</DialogTitle>
+                    <DialogContent>
+                        <List>
+                            {Object.entries(cartItems).map(([id, quantity]) => {
+                                const book = books.find(book => book.id === id);
+                                return (
+                                    <ListItem key={id}>
+                                        <ListItemText primary={book.name} secondary={`Quantity: ${quantity}`} />
+                                        <ListItemSecondaryAction>
+                                            <IconButton edge="end" aria-label="increase" onClick={() => handleIncrement(id)}>
+                                                <AddIcon />
+                                            </IconButton>
+                                            <IconButton edge="end" aria-label="decrease" onClick={() => handleDecrement(id)}>
+                                                <RemoveIcon />
+                                            </IconButton>
+                                        </ListItemSecondaryAction>
+                                    </ListItem>
+                                );
+                            })}
+                        </List>
+                    </DialogContent>
+                </Dialog>
+
             </Container>
             <IconButton className={classes.customButton} onClick={() => setCartOpen(true)}>
-                <Badge badgeContent={3} color="error">
+                <Badge badgeContent={totalItems} color="error">
                     <AddShoppingCart />
                 </Badge>
             </IconButton>
