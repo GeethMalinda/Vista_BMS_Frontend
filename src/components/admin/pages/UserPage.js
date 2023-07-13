@@ -42,6 +42,7 @@ import {
   Switch,
   TextField
 } from "@material-ui/core";
+import moment from "moment";
 
 // ----------------------------------------------------------------------
 
@@ -138,11 +139,25 @@ export default function UserPage() {
 
   const [bookFormat, setBookFormat] = useState('Book');
   const [eBookFile, setEbookFile] = useState(null);
-
   const [bookCoverFile, setBookCoverFile] = useState(null);
+  const [language, setLanguage] = useState('Sinhala');
+  const [status, setStatus] = useState('Available');
+  const [category, setCategory] = useState('Nonfiction');
+
+  const handleCategoryChange = (event) => {
+    setCategory(event.target.value);
+  };
+
+  const handleStatusChange = (event) => {
+    setStatus(event.target.value);
+  };
 
   const handleEbookFileChange = (e) => {
     setEbookFile(e.target.files[0]);
+  };
+
+  const handleLanguageChange = (event) => {
+    setLanguage(event.target.value);
   };
 
   useEffect(() => {
@@ -150,8 +165,9 @@ export default function UserPage() {
   }, [dispatch]);
 
   const handleBookFormatChange = (event) => {
-    setBookFormat(event.target.value);
+    setBookFormat(event.target.value)
   };
+
 
   const handleUpdateBook = () => {
     if (updatedBook) {
@@ -176,9 +192,42 @@ export default function UserPage() {
     })));
   };
 
+  const resetForm = () => {
+    setNewBook({
+      isbn: "",
+      name: "",
+      author: "",
+      publisher: "",
+      language: "",
+      pages: "",
+      publicationDate: "",
+      status: "",
+      format: "",
+      price: "",
+      discount: "",
+    });
+    setBookFormat("Book");
+    setBookCoverFile(null);
+    setStatus("Available"); // Set default status
+    setCategory("Nonfiction"); // Set default category
+    setLanguage("Sinhala"); // Set default language
+  };
+
   const handleNewBookSubmit = () => {
+
+    const dummyPublicationDate = moment(new Date()).format('YYYY-MM-DD');
+
     if(newBook) {
-      dispatch(createBook(newBook,bookCoverFile,eBookFile));
+      const book = {
+        ...newBook,
+        status: status,
+        category: category,
+        language: language,
+        format: bookFormat,
+        publicationDate:dummyPublicationDate
+      };
+
+      dispatch(createBook(book,bookCoverFile,eBookFile));
       setNewBookDialogOpen(false);
       setNewBook({
         isbn: '',
@@ -194,9 +243,11 @@ export default function UserPage() {
         discount: '',
       })
       setBookFormat('');  // reset book format state
-      setBookCoverFile(null)
+      setBookCoverFile(null);
+      resetForm();
     }
   };
+
 
   const handleRowClick = (row) => {
     setSelectedRow(row);
@@ -211,7 +262,6 @@ export default function UserPage() {
   const handleOpenMenu = (event, book) => {
     setOpen(event.currentTarget);
     setSelectedBook(book);
-    console.log('handle open ',book)
   };
 
   const handleDelete = (isbn) => {
@@ -471,12 +521,52 @@ export default function UserPage() {
                 <TextField margin="dense" id="name" label="Book Title" type="text" value={newBook.name} fullWidth onChange={handleNewBookChange} />
                 <TextField margin="dense" id="author" label="Author" type="text" value={newBook.author} fullWidth onChange={handleNewBookChange} />
                 <TextField margin="dense" id="publisher" label="Publisher" type="text" value={newBook.publisher} fullWidth onChange={handleNewBookChange} />
-                <TextField margin="dense" id="language" label="Language" type="text" value={newBook.language} fullWidth onChange={handleNewBookChange} />
+                <FormControl margin="dense" fullWidth>
+                  <InputLabel id="language-label">Language</InputLabel>
+                  <Select
+                      labelId="language-label"
+                      id="language"
+                      value={language}
+                      onChange={handleLanguageChange}
+                  >
+                    <MenuItem value={'ENGLISH'}>English</MenuItem>
+                    <MenuItem value={'SINHALA'}>Sinhala</MenuItem>
+                    <MenuItem value={'OTHER'}>Other</MenuItem>
+                  </Select>
+                </FormControl>
                 <TextField margin="dense" id="pages" label="Pages" type="text" value={newBook.pages} fullWidth onChange={handleNewBookChange} />
               </Grid>
               <Grid item xs={6}>
+                <FormControl margin="dense" fullWidth>
+                  <InputLabel id="category-label">Category</InputLabel>
+                  <Select
+                      labelId="category-label"
+                      id="category"
+                      value={category}
+                      onChange={handleCategoryChange}
+                  >
+                    <MenuItem value={'CATEGORY_FICTION'}>Fiction</MenuItem>
+                    <MenuItem value={'CATEGORY_NONFICTION'}>Nonfiction</MenuItem>
+                    <MenuItem value={'CATEGORY_KIDS'}>Kids</MenuItem>
+                    <MenuItem value={'CATEGORY_SCIENCE_TECHNOLOGY'}>Science & Technology</MenuItem>
+                    <MenuItem value={'CATEGORY_GRAPHIC_NOVELS_COMICS'}>Graphic Novels & Comics</MenuItem>
+                    <MenuItem value={'CATEGORY_POETRY'}>Poetry</MenuItem>
+                  </Select>
+                </FormControl>
+
                 <TextField margin="dense" id="publication_date" label="Pub. Date" type="text" value={newBook.publicationDate} fullWidth onChange={handleNewBookChange} />
-                <TextField margin="dense" id="status" label="Status" type="text" value={newBook.status} fullWidth onChange={handleNewBookChange} />
+                <FormControl margin="dense" fullWidth>
+                  <InputLabel id="status-label">Status</InputLabel>
+                  <Select
+                      labelId="status-label"
+                      id="status"
+                      value={status}
+                      onChange={handleStatusChange}
+                  >
+                    <MenuItem value="AVAILABLE">Available</MenuItem>
+                    <MenuItem value="UNAVAILABLE">Unavailable</MenuItem>
+                  </Select>
+                </FormControl>
                 <FormControl margin="dense" fullWidth>
                   <InputLabel id="format-label">Format</InputLabel>
                   <Select
@@ -485,8 +575,8 @@ export default function UserPage() {
                       value={bookFormat}
                       onChange={handleBookFormatChange}
                   >
-                    <MenuItem value={'Book'}>Book</MenuItem>
-                    <MenuItem value={'Ebook'}>Ebook</MenuItem>
+                    <MenuItem value={'BOOK'}>Book</MenuItem>
+                    <MenuItem value={'EBOOK'}>Ebook</MenuItem>
                   </Select>
                 </FormControl>
                 <TextField margin="dense" id="price" label="Price" type="text" value={newBook.price} fullWidth onChange={handleNewBookChange} />
@@ -494,7 +584,7 @@ export default function UserPage() {
               </Grid>
               <Grid item xs={12} container direction="column" justify="center" alignItems="center">
 
-                {bookFormat === 'Ebook' && (
+                {bookFormat === 'EBOOK' && (
                     <>
                       <Typography variant="h6" style={{ marginTop: '20px' }}>Ebook Upload</Typography>
                       <FileUpload
@@ -528,7 +618,7 @@ export default function UserPage() {
                     </>
                 )}
 
-                {bookFormat === 'Book' && (
+                {bookFormat === 'BOOK' && (
                     <>
                       <Typography variant="h6" style={{ marginTop: '20px' }}>Book Cover Upload</Typography>
                       <FileUpload

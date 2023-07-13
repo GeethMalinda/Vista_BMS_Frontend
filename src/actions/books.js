@@ -74,6 +74,10 @@ export const getBook = (id) => async (dispatch) => {
 }
 
 export const createBook = (book, bookCoverFile, eBookFile) => async (dispatch) => {
+
+    console.log(book)
+    console.log(bookCoverFile)
+    console.log(eBookFile)
     try {
 
         const { data } = await api.createBook(book, bookCoverFile[0], eBookFile[0]);

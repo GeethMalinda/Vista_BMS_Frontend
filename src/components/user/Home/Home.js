@@ -13,16 +13,20 @@ import {
     ListItemIcon,
     ListItemText,
     IconButton, Menu, MenuItem,
-    ListItemSecondaryAction, Grid, Container, InputAdornment, TextField,
+    ListItemSecondaryAction, Grid, Container, InputAdornment, TextField, Badge,
 } from "@material-ui/core";
 import useStyles from './style';
-import {Search,ArrowDropDown} from "@mui/icons-material";
+import {Search, ArrowDropDown, AddShoppingCart} from "@mui/icons-material";
 import { useNavigate } from 'react-router-dom'; // Import useNavigate instead of useHistory
 import {useDispatch} from "react-redux";
 import {selectBook, setBooks} from "../../../actions/books";
 import { useSelector } from 'react-redux';
 import Navbar from "../navbar/Navbar";
 import {getBooks , getBookByCategory} from "../../../actions/books";
+import { Paper } from '@material-ui/core';
+import BookIcon from '@mui/icons-material/Book';
+
+
 
 
 //this is the home menu
@@ -31,6 +35,9 @@ const Home = () => {
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = useState(null);
     const navigate = useNavigate(); // Use useNavigate instead of useHistory
+    const [animate, setAnimate] = useState(false);
+    const [addToCartToggled, setAddToCartToggled] = useState(false);
+    const [cartOpen, setCartOpen] = useState(false);
 
     const { books } = useSelector((state) => state.books);
 
@@ -58,6 +65,7 @@ const Home = () => {
 
 
     const handleButtonClick = (id) => {
+        setAddToCartToggled(true)
         setClickedButtons((prevState) => ({
             ...prevState,
             [id]: !prevState[id],
@@ -69,6 +77,12 @@ const Home = () => {
         setClickedCategory(category);
         dispatch(getBookByCategory(category));
     };
+
+    const calculateAfterDiscount = (originalPrice, discountRate) => {
+        let discountedPrice = originalPrice * (1 - discountRate);
+        return discountedPrice.toFixed(2); // toFixed(2) will round to two decimal places
+
+    }
 
     useEffect(() => {
         const handleScroll = () => {
@@ -205,31 +219,47 @@ const Home = () => {
                                         <Typography variant="h5" gutterBottom>{book.name}</Typography>
                                         <Typography variant="body1">{book.author}</Typography>
                                         <Typography variant="body1">{book.description}</Typography>
-                                        <Typography variant="button">{book.price}</Typography>
+                                        <Paper elevation={3} style={{ padding: '10px', backgroundColor: '#f5f5f5' , marginTop:'10px' , marginBottom:'10px'}}>
+                                            <Typography variant="h6" gutterBottom>
+                                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                    <s>${book.price}</s>
+                                                    <Typography variant="h5" style={{ color: 'green', marginLeft: '10px' }}>${calculateAfterDiscount(book.price, book.discount)}</Typography>
+                                                </div>
+                                            </Typography>
+                                        </Paper>
+
+
                                     </CardContent>
-                                    <List>
-                                        <ListItem>
-                                            <ListItemIcon>
-                                                <Button
-                                                    variant="contained"
-                                                    color={clickedButtons[book.id] ? "default" : "primary"}
-                                                    style={{
-                                                        backgroundColor: clickedButtons[book.id] ? "#00FF00" : "",
-                                                    }}
-                                                    onClick={() => handleButtonClick(book.id)}
-                                                >
-                                                    Add to Cart
-                                                </Button>
-                                            </ListItemIcon>
-                                            {/*<ListItemText primary={book.price}/>*/}
-                                        </ListItem>
-                                    </List>
+                                    <Button
+                                        variant="contained"
+                                        color={clickedButtons[book.id] ? "default" : "primary"}
+                                        style={{
+                                            backgroundColor: clickedButtons[book.id] ? "#00FF00" : "",
+                                        }}
+                                        onClick={() => {
+                                            handleButtonClick(book.id);
+                                            setAnimate(true);
+                                        }}
+                                    >
+                                        Add to Cart
+                                    </Button>
+                                    {animate &&
+                                    <div className="book-icon" onAnimationEnd={() => setAnimate(false)}>
+                                        <BookIcon fontSize="large" color="primary" />
+                                    </div>
+                                    }
                                 </Card>
                             </Grid>
                         ))}
                     </Grid>
                 </Container>
             </Container>
+            <IconButton className={classes.customButton} onClick={() => setCartOpen(true)}>
+                <Badge badgeContent={3} color="error">
+                    <AddShoppingCart />
+                </Badge>
+            </IconButton>
+
         </>
     );
 }
