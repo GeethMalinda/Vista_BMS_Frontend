@@ -26,7 +26,7 @@ import {
     ListItemSecondaryAction,
     Grid,
     InputAdornment,
-    Paper
+    Paper, List
 } from "@material-ui/core";
 import {Search, ArrowDropDown, AddShoppingCart, Add as AddIcon, Remove as RemoveIcon} from "@mui/icons-material";
 import {selectBook, getBooks, getBookByCategory} from "../../../actions/books";
@@ -38,8 +38,11 @@ import Navbar from "../navbar/Navbar";
 const Home = () => {
     const dispatch = useDispatch();
     const classes = useStyles();
+    const navigate = useNavigate();
     const [anchorEl, setAnchorEl] = useState(null);
-    const navigate = useNavigate(); // Use useNavigate instead of useHistory
+    const [appBarPosition, setAppBarPosition] = useState("relative");
+    const [clickedCategory, setClickedCategory] = useState("");
+    const [cartItems, setCartItems] = useState({});
     const [cartOpen, setCartOpen] = useState(false);
 
     const { books } = useSelector((state) => state.books);
@@ -48,6 +51,18 @@ const Home = () => {
         dispatch(getBooks());
     }, [dispatch]);
 
+    useEffect(() => {
+        const handleScroll = () => {
+            if (window.scrollY > 100) {
+                setAppBarPosition("fixed");
+            } else {
+                setAppBarPosition("relative");
+            }
+        };
+
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -58,26 +73,14 @@ const Home = () => {
     };
 
     const handleCardClick = (book) => {
-        console.log('book',book)
         dispatch(selectBook(book));
         navigate(`/customer/book/${book.isbn}`);
     };
 
-    const [appBarPosition, setAppBarPosition] = useState("relative");
-    const [clickedButtons, setClickedButtons] = useState({});
-    const [clickedCategory, setClickedCategory] = useState("");
-    const [cartItems, setCartItems] = useState({});
-
-
-    const handleButtonClick = (book) => {
-        setAddToCartToggled(true);
-        setClickedButtons((prevState) => ({
-            ...prevState,
-            [book.isbn]: !prevState[book.isbn],
-        }));
+    const handleButtonClick = (isbn) => {
         setCartItems((prevState) => ({
             ...prevState,
-            [book.isbn]: prevState[book.isbn] ? prevState[book.isbn] + 1 : 1,
+            [isbn]: prevState[isbn] ? prevState[isbn] + 1 : 1,
         }));
     };
 
@@ -102,33 +105,17 @@ const Home = () => {
     };
 
     const handleCategoryClick = (category) => {
-        console.log(category);
         setClickedCategory(category);
         dispatch(getBookByCategory(category));
     };
 
     const calculateAfterDiscount = (originalPrice, discountRate) => {
         let discountedPrice = originalPrice * (1 - discountRate);
-        return discountedPrice.toFixed(2); // toFixed(2) will round to two decimal places
-
+        return discountedPrice.toFixed(2);
     }
 
-    useEffect(() => {
-        const handleScroll = () => {
-            if (window.scrollY > 100) {
-                setAppBarPosition("fixed");
-            } else {
-                setAppBarPosition("relative");
-            }
-        };
-
-        window.addEventListener("scroll", handleScroll);
-        return () => {
-            window.removeEventListener("scroll", handleScroll);
-        };
-    }, []);
-
     const totalItems = Object.values(cartItems).reduce((a, b) => a + b, 0);
+    const cartItemsData = books.filter(book => cartItems[book.isbn]);
 
     return (
         <>
@@ -264,10 +251,7 @@ const Home = () => {
 
                                     <Button
                                         variant="contained"
-                                        color={clickedButtons[book.isbn] ? "default" : "primary"}
-                                        style={{
-                                            backgroundColor: clickedButtons[book.isbn] ? "#00FF00" : "",
-                                        }}
+
                                         onClick={(event) => {
 
                                             handleButtonClick(book.isbn);
@@ -282,33 +266,34 @@ const Home = () => {
                         ))}
                     </Grid>
                 </Container>
-                <Dialog open={cartOpen} onClose={() => setCartOpen(false)} fullWidth>
+                <Dialog fullWidth onClose={() => setCartOpen(false)} open={Boolean(cartItemsData.length)}>
                     <DialogTitle>Shopping Cart</DialogTitle>
                     <DialogContent>
                         <List>
-                            {Object.entries(cartItems).map(([isbn, quantity]) => {
-                                const book = books.find(book => book.isbn === isbn);
-                                return book ? (
-                                    <ListItem key={isbn}>
-                                        <ListItemText primary={book.name} secondary={`Quantity: ${quantity}`} />
-                                        <ListItemSecondaryAction>
-                                            <IconButton edge="end" aria-label="increase" onClick={() => handleIncrement(isbn)}>
-                                                <AddIcon />
-                                            </IconButton>
-                                            <IconButton edge="end" aria-label="decrease" onClick={() => handleDecrement(isbn)}>
-                                                <RemoveIcon />
-                                            </IconButton>
-                                        </ListItemSecondaryAction>
-                                    </ListItem>
-                                ) : null;
-                            })}
-
+                            {cartItemsData.map(book => (
+                                <ListItem key={book.isbn}>
+                                    <ListItemText primary={book.name} secondary={`Quantity: ${cartItems[book.isbn]}`} />
+                                    <ListItemSecondaryAction>
+                                        <IconButton edge="end" aria-label="increase" onClick={() => handleIncrement(book.isbn)}>
+                                            <AddIcon />
+                                        </IconButton>
+                                        <IconButton edge="end" aria-label="decrease" onClick={() => handleDecrement(book.isbn)}>
+                                            <RemoveIcon />
+                                        </IconButton>
+                                    </ListItemSecondaryAction>
+                                </ListItem>
+                            ))}
                         </List>
                     </DialogContent>
+                    <DialogActions>
+                        <Button onClick={() => navigate('/checkout')} color="primary">
+                            Checkout
+                        </Button>
+                    </DialogActions>
                 </Dialog>
 
             </Container>
-            <IconButton className={classes.customButton} onClick={() => setCartOpen(true)}>
+            <IconButton className={classes.customButton}>
                 <Badge badgeContent={totalItems} color="error">
                     <AddShoppingCart />
                 </Badge>
