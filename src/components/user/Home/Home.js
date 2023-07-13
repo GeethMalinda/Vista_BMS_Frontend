@@ -1,5 +1,8 @@
 import React, {useState, useEffect} from "react";
 import ReactDOM from "react-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from 'react-router-dom';
+import useStyles from './style';
 import {
     AppBar,
     Button,
@@ -8,25 +11,26 @@ import {
     Card,
     CardContent,
     CardMedia,
-    List,
+    Container,
+    IconButton,
+    Menu,
+    MenuItem,
+    TextField,
+    Badge,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogActions,
     ListItem,
-    ListItemIcon,
     ListItemText,
-    IconButton, Menu, MenuItem,
-    ListItemSecondaryAction, Grid, Container, InputAdornment, TextField, Badge, Dialog, DialogTitle, DialogContent,
+    ListItemSecondaryAction,
+    Grid,
+    InputAdornment,
+    Paper
 } from "@material-ui/core";
-import useStyles from './style';
-import {Search, ArrowDropDown, AddShoppingCart} from "@mui/icons-material";
-import { useNavigate } from 'react-router-dom'; // Import useNavigate instead of useHistory
-import {useDispatch} from "react-redux";
-import {selectBook, setBooks} from "../../../actions/books";
-import { useSelector } from 'react-redux';
+import {Search, ArrowDropDown, AddShoppingCart, Add as AddIcon, Remove as RemoveIcon} from "@mui/icons-material";
+import {selectBook, getBooks, getBookByCategory} from "../../../actions/books";
 import Navbar from "../navbar/Navbar";
-import {getBooks , getBookByCategory} from "../../../actions/books";
-import { Paper } from '@material-ui/core';
-import BookIcon from '@mui/icons-material/Book';
-import AddIcon from '@mui/icons-material/Add';
-import RemoveIcon from '@mui/icons-material/Remove';
 
 
 
@@ -36,8 +40,6 @@ const Home = () => {
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = useState(null);
     const navigate = useNavigate(); // Use useNavigate instead of useHistory
-    const [animate, setAnimate] = useState(false);
-    const [addToCartToggled, setAddToCartToggled] = useState(false);
     const [cartOpen, setCartOpen] = useState(false);
 
     const { books } = useSelector((state) => state.books);
@@ -45,6 +47,7 @@ const Home = () => {
     useEffect(() => {
         dispatch(getBooks());
     }, [dispatch]);
+
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -57,7 +60,7 @@ const Home = () => {
     const handleCardClick = (book) => {
         console.log('book',book)
         dispatch(selectBook(book));
-        navigate(`/customer/book/${book.id}`);
+        navigate(`/customer/book/${book.isbn}`);
     };
 
     const [appBarPosition, setAppBarPosition] = useState("relative");
@@ -70,30 +73,30 @@ const Home = () => {
         setAddToCartToggled(true);
         setClickedButtons((prevState) => ({
             ...prevState,
-            [book.id]: !prevState[book.id],
+            [book.isbn]: !prevState[book.isbn],
         }));
         setCartItems((prevState) => ({
             ...prevState,
-            [book.id]: prevState[book.id] ? prevState[book.id] + 1 : 1,
+            [book.isbn]: prevState[book.isbn] ? prevState[book.isbn] + 1 : 1,
         }));
     };
 
-    const handleIncrement = (id) => {
+    const handleIncrement = (isbn) => {
         setCartItems((prevState) => ({
             ...prevState,
-            [id]: prevState[id] + 1,
+            [isbn]: prevState[isbn] + 1,
         }));
     };
 
-    const handleDecrement = (id) => {
-        if (cartItems[id] > 1) {
+    const handleDecrement = (isbn) => {
+        if (cartItems[isbn] > 1) {
             setCartItems((prevState) => ({
                 ...prevState,
-                [id]: prevState[id] - 1,
+                [isbn]: prevState[isbn] - 1,
             }));
         } else {
             const newCartItems = {...cartItems};
-            delete newCartItems[id];
+            delete newCartItems[isbn];
             setCartItems(newCartItems);
         }
     };
@@ -258,25 +261,22 @@ const Home = () => {
 
 
                                     </CardContent>
+
                                     <Button
                                         variant="contained"
-                                        color={clickedButtons[book.id] ? "default" : "primary"}
+                                        color={clickedButtons[book.isbn] ? "default" : "primary"}
                                         style={{
-                                            backgroundColor: clickedButtons[book.id] ? "#00FF00" : "",
+                                            backgroundColor: clickedButtons[book.isbn] ? "#00FF00" : "",
                                         }}
                                         onClick={(event) => {
+
+                                            handleButtonClick(book.isbn);
                                             event.stopPropagation();
-                                            handleButtonClick(book.id);
-                                            setAnimate(true);
                                         }}
                                     >
                                         Add to Cart
                                     </Button>
-                                    {animate &&
-                                    <div className="book-icon" onAnimationEnd={() => setAnimate(false)}>
-                                        <BookIcon fontSize="large" color="primary" />
-                                    </div>
-                                    }
+
                                 </Card>
                             </Grid>
                         ))}
@@ -286,22 +286,23 @@ const Home = () => {
                     <DialogTitle>Shopping Cart</DialogTitle>
                     <DialogContent>
                         <List>
-                            {Object.entries(cartItems).map(([id, quantity]) => {
-                                const book = books.find(book => book.id === id);
-                                return (
-                                    <ListItem key={id}>
+                            {Object.entries(cartItems).map(([isbn, quantity]) => {
+                                const book = books.find(book => book.isbn === isbn);
+                                return book ? (
+                                    <ListItem key={isbn}>
                                         <ListItemText primary={book.name} secondary={`Quantity: ${quantity}`} />
                                         <ListItemSecondaryAction>
-                                            <IconButton edge="end" aria-label="increase" onClick={() => handleIncrement(id)}>
+                                            <IconButton edge="end" aria-label="increase" onClick={() => handleIncrement(isbn)}>
                                                 <AddIcon />
                                             </IconButton>
-                                            <IconButton edge="end" aria-label="decrease" onClick={() => handleDecrement(id)}>
+                                            <IconButton edge="end" aria-label="decrease" onClick={() => handleDecrement(isbn)}>
                                                 <RemoveIcon />
                                             </IconButton>
                                         </ListItemSecondaryAction>
                                     </ListItem>
-                                );
+                                ) : null;
                             })}
+
                         </List>
                     </DialogContent>
                 </Dialog>
