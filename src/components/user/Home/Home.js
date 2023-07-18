@@ -26,7 +26,7 @@ import {
     ListItemSecondaryAction,
     Grid,
     InputAdornment,
-    Paper, List
+    Paper, List, Divider, ListItemAvatar, Avatar
 } from "@material-ui/core";
 import {Search, ArrowDropDown, AddShoppingCart, Add as AddIcon, Remove as RemoveIcon} from "@mui/icons-material";
 import {selectBook, getBooks, getBookByCategory} from "../../../actions/books";
@@ -44,6 +44,7 @@ const Home = () => {
     const [clickedCategory, setClickedCategory] = useState("");
     const [cartItems, setCartItems] = useState({});
     const [cartOpen, setCartOpen] = useState(false);
+    const [totalItems, setTotalItems] = useState(0);
 
     const { books } = useSelector((state) => state.books);
 
@@ -78,17 +79,22 @@ const Home = () => {
     };
 
     const handleButtonClick = (isbn) => {
+        if (!cartItems[isbn]) {
+            setTotalItems(prev => prev + 1);
+        }
         setCartItems((prevState) => ({
             ...prevState,
             [isbn]: prevState[isbn] ? prevState[isbn] + 1 : 1,
         }));
     };
 
+
     const handleIncrement = (isbn) => {
         setCartItems((prevState) => ({
             ...prevState,
             [isbn]: prevState[isbn] + 1,
         }));
+        setTotalItems(prev => prev + 1);
     };
 
     const handleDecrement = (isbn) => {
@@ -97,12 +103,15 @@ const Home = () => {
                 ...prevState,
                 [isbn]: prevState[isbn] - 1,
             }));
-        } else {
+            setTotalItems(prev => prev - 1);
+        } else if (cartItems[isbn] === 1) {
             const newCartItems = {...cartItems};
             delete newCartItems[isbn];
             setCartItems(newCartItems);
+            setTotalItems(prev => prev - 1);
         }
     };
+
 
     const handleCategoryClick = (category) => {
         setClickedCategory(category);
@@ -114,7 +123,6 @@ const Home = () => {
         return discountedPrice.toFixed(2);
     }
 
-    const totalItems = Object.values(cartItems).reduce((a, b) => a + b, 0);
     const cartItemsData = books.filter(book => cartItems[book.isbn]);
 
     return (
@@ -241,7 +249,7 @@ const Home = () => {
                                             <Typography variant="h6" gutterBottom>
                                                 <div style={{ display: 'flex', alignItems: 'center' }}>
                                                     <s>${book.price}</s>
-                                                    <Typography variant="h5" style={{ color: 'green', marginLeft: '10px' }}>${calculateAfterDiscount(book.price, book.discount)}</Typography>
+                                                    <Typography variant="h5" style={{ color: '#229A16', marginLeft: '10px' }}>${calculateAfterDiscount(book.price, book.discount)}</Typography>
                                                 </div>
                                             </Typography>
                                         </Paper>
@@ -251,7 +259,7 @@ const Home = () => {
 
                                     <Button
                                         variant="contained"
-
+                                        color="primary"
                                         onClick={(event) => {
 
                                             handleButtonClick(book.isbn);
@@ -266,39 +274,58 @@ const Home = () => {
                         ))}
                     </Grid>
                 </Container>
-                <Dialog fullWidth onClose={() => setCartOpen(false)} open={Boolean(cartItemsData.length)}>
-                    <DialogTitle>Shopping Cart</DialogTitle>
+                <Dialog fullWidth onClose={() => setCartOpen(false)} open={cartOpen}>
+                    <DialogTitle style={{
+                        backgroundColor: '#229A16',
+                        color: 'white',
+                        fontWeight: 'bold',
+                        textAlign: 'center', }} >
+                        Shopping Cart
+                    </DialogTitle>
                     <DialogContent>
                         <List>
-                            {cartItemsData.map(book => (
-                                <ListItem key={book.isbn}>
-                                    <ListItemText primary={book.name} secondary={`Quantity: ${cartItems[book.isbn]}`} />
-                                    <ListItemSecondaryAction>
-                                        <IconButton edge="end" aria-label="increase" onClick={() => handleIncrement(book.isbn)}>
-                                            <AddIcon />
-                                        </IconButton>
-                                        <IconButton edge="end" aria-label="decrease" onClick={() => handleDecrement(book.isbn)}>
-                                            <RemoveIcon />
-                                        </IconButton>
-                                    </ListItemSecondaryAction>
-                                </ListItem>
+                            {cartItemsData.map((book, index) => (
+                                <React.Fragment key={book.isbn}>
+                                    <ListItem>
+                                        <Grid container>
+                                            <Grid item xs={2}>
+                                                <img src={book.imageURL} style={{width: 'auto', height: '75px'}} alt={book.name}/>
+                                            </Grid>
+                                            <Grid item xs={10}>
+                                                <ListItemText primary={book.name} secondary={`Quantity: ${cartItems[book.isbn]}`} />
+                                                <Typography variant="body1" style={{color: '#229A16', fontWeight: 'bold'}}>
+                                                    {`Rs. ${book.price}`}
+                                                </Typography>
+                                                <ListItemSecondaryAction>
+                                                    <IconButton edge="end" aria-label="increase" onClick={() => handleIncrement(book.isbn)} style={{backgroundColor: '#229A16', color: 'white', marginRight: '10px'}}>
+                                                        <AddIcon />
+                                                    </IconButton>
+                                                    <IconButton edge="end" aria-label="decrease" onClick={() => handleDecrement(book.isbn)} style={{backgroundColor: '#FFC107', color: 'white'}}>
+                                                        <RemoveIcon />
+                                                    </IconButton>
+                                                </ListItemSecondaryAction>
+                                            </Grid>
+                                        </Grid>
+                                    </ListItem>
+                                    {index < cartItemsData.length - 1 && <Divider />}
+                                </React.Fragment>
                             ))}
                         </List>
                     </DialogContent>
+
                     <DialogActions>
-                        <Button onClick={() => navigate('/checkout')} color="primary">
+                        <Button onClick={() => navigate('/payment')} color="primary">
                             Checkout
                         </Button>
                     </DialogActions>
                 </Dialog>
 
             </Container>
-            <IconButton className={classes.customButton}>
+            <IconButton className={classes.customButton} onClick={() => setCartOpen(true)}>
                 <Badge badgeContent={totalItems} color="error">
                     <AddShoppingCart />
                 </Badge>
             </IconButton>
-
         </>
     );
 }

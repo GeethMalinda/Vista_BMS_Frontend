@@ -14,6 +14,7 @@ import ProductsPage from "./components/admin/pages/ProductsPage";
 import BlogPage from "./components/admin/pages/BlogPage";
 import Page404 from "./components/admin/pages/Page404";
 import BookDetails from "./components/user/PostDetails/BookDetails";
+import Checkout from "./components/user/pay/Checkout";
 
 // ----------------------------------------------------------------------
 
@@ -41,6 +42,11 @@ export default function Router() {
     {
       path: '/login',
       element: <SignUp />,
+
+    },
+    {
+      path: '/payment',
+      element: <Checkout />,
 
     },
     {
