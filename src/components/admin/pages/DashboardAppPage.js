@@ -53,7 +53,7 @@ export default function DashboardAppPage() {
 
           <Grid item xs={12} md={6} lg={8}>
             <AppWebsiteVisits
-              title="Website Visits"
+              title="Sales Prediction"
               subheader="(+43%) than last year"
               chartLabels={[
                 '01/01/2003',
@@ -93,12 +93,12 @@ export default function DashboardAppPage() {
 
           <Grid item xs={12} md={6} lg={4}>
             <AppCurrentVisits
-              title="Current Visits"
+              title="Recommended Books"
               chartData={[
-                { label: 'America', value: 4344 },
-                { label: 'Asia', value: 5435 },
-                { label: 'Europe', value: 1443 },
-                { label: 'Africa', value: 4443 },
+                { label: 'Book1', value: 4344 },
+                { label: 'Book2', value: 5435 },
+                { label: 'Book3', value: 1443 },
+                { label: 'Book4', value: 4443 },
               ]}
               chartColors={[
                 theme.palette.primary.main,

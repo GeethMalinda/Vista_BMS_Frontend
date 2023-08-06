@@ -22,7 +22,7 @@ import * as api from '../api/index';
 export const getBooks = () => async (dispatch) => {
     try {
         const { data } = await api.getAllBooks();
-
+        console.log('data ', data)
         dispatch({ type: FETCH_ALL, payload: data });
     } catch (error) {
         console.log(error.message);
@@ -175,23 +175,23 @@ export const likeBook = (id) => async (dispatch) => {
     }
 };
 
-export const commentBook = (value, id) => async (dispatch) => {
-    try {
-        const post = dummyPosts.find((post) => post._id === id);
-        const newComment = {
-            _id: `comment${post.comments.length + 1}`,
-            name: 'New Commenter Name',
-            message: value,
-            createdAt: new Date(),
-        };
-
-        post.comments.push(newComment);
-
-        dispatch({ type: COMMENT, payload: post });
-
-        return post.comments;
-    } catch (error) {
-        console.log(error);
-    }
-};
+// export const commentBook = (value, id) => async (dispatch) => {
+//     try {
+//         const post = dummyPosts.find((post) => post._id === id);
+//         const newComment = {
+//             _id: `comment${post.comments.length + 1}`,
+//             name: 'New Commenter Name',
+//             message: value,
+//             createdAt: new Date(),
+//         };
+//
+//         post.comments.push(newComment);
+//
+//         dispatch({ type: COMMENT, payload: post });
+//
+//         return post.comments;
+//     } catch (error) {
+//         console.log(error);
+//     }
+// };
 

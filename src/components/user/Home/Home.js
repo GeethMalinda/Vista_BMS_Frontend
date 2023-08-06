@@ -142,7 +142,7 @@ const Home = () => {
                                     onClick={handleClick}
                                 >
                                     <Typography variant="h6" className={classes.menuTitle}>
-                                        Blackwell's
+
                                     </Typography>
                                     <ArrowDropDown />
                                 </IconButton>
