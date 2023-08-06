@@ -36,9 +36,10 @@ const bookReducer = (state = initialState, action) => {
             return {
                 ...state,
                 books: state.books.map((book) => book.isbn === action.payload.isbn
-                    ? {...book, comments: [...book.comments, action.payload.comment]}
+                    ? {...book, comments: book.comments ? [...book.comments, action.payload.comment] : [action.payload.comment]}
                     : book),
             };
+
         case CREATE_BOOK:
             return {
                 ...state,
