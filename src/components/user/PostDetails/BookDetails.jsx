@@ -30,12 +30,12 @@ const BookDetails = () => {
     }, [id]);
 
     useEffect(() => {
-        console.log('update book ',updatedBook)
+        console.log('Updated book: ', updatedBook); // Debugging log
         if (updatedBook && updatedBook.comments) {
+            console.log('Setting comments:', updatedBook.comments); // Debugging log
             setComments(updatedBook.comments);
         }
     }, [updatedBook]);
-
 
     const openPost = (_id) => {
         navigate(`/customer/book/${_id}`);
@@ -140,10 +140,10 @@ const BookDetails = () => {
             <Divider style={{margin: '20px 0'}}/>
 
             <h3>Comments</h3>
-            {comments && comments.map((comment, index) => (
-                <p key={index}>{comment.text}</p> // Assuming each comment has a 'text' property
-            ))}
-
+            {comments && comments.map((comment, index) => {
+                console.log('Rendering comment:', comment); // Debugging log
+                return <p key={index}>{comment}</p> // Assuming each comment has a 'text' property
+            })}
             {recommendedPosts && recommendedPosts.length > 0 && (
                 <div className={classes.section}>
                     <Typography gutterBottom variant="h5">You might also like:</Typography>

@@ -32,12 +32,23 @@ const bookReducer = (state = initialState, action) => {
                 book: action.payload,
             };
         case ADD_COMMENT:
-            console.log("Action: ", action);
+            console.log("Received ADD_COMMENT action with payload: ", action.payload); // Debugging log
+            const updatedBooks = state.books.map((book) => {
+                console.log("Checking book with isbn: ", book.isbn);  // Debugging log
+                if(book.isbn === action.payload.isbn) {
+                    console.log("Found matching book, adding comment");  // Debugging log
+                    const updatedBook = {...book, comments: book.comments ? [...book.comments, action.payload.comment] : [action.payload.comment]};
+                    console.log('Updated Book:', updatedBook); // Debugging log for the updated book
+                    return updatedBook;
+                } else {
+                    return book;
+                }
+            });
+
+            console.log('Updated Books:', updatedBooks); // Debugging log for the updated books
             return {
                 ...state,
-                books: state.books.map((book) => book.isbn === action.payload.isbn
-                    ? {...book, comments: book.comments ? [...book.comments, action.payload.comment] : [action.payload.comment]}
-                    : book),
+                books: updatedBooks,
             };
 
         case CREATE_BOOK:

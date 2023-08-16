@@ -31,6 +31,8 @@ import {
 import {Search, ArrowDropDown, AddShoppingCart, Add as AddIcon, Remove as RemoveIcon} from "@mui/icons-material";
 import {selectBook, getBooks, getBookByCategory} from "../../../actions/books";
 import Navbar from "../navbar/Navbar";
+import Box from "@mui/material/Box";
+import {Icon} from "@iconify/react";
 
 
 
@@ -94,23 +96,25 @@ const Home = () => {
             ...prevState,
             [isbn]: prevState[isbn] + 1,
         }));
-        setTotalItems(prev => prev + 1);
-    };
+    }
+
 
     const handleDecrement = (isbn) => {
-        if (cartItems[isbn] > 1) {
-            setCartItems((prevState) => ({
-                ...prevState,
-                [isbn]: prevState[isbn] - 1,
-            }));
-            setTotalItems(prev => prev - 1);
-        } else if (cartItems[isbn] === 1) {
-            const newCartItems = {...cartItems};
-            delete newCartItems[isbn];
-            setCartItems(newCartItems);
-            setTotalItems(prev => prev - 1);
+        if (cartItems[isbn] && cartItems[isbn] > 0) {
+            setCartItems((prevState) => {
+                const updatedState = { ...prevState };
+                updatedState[isbn] -= 1;
+
+                if (updatedState[isbn] === 0) {
+                    delete updatedState[isbn];
+                    setTotalItems(prev => prev - 1);
+                }
+
+                return updatedState;
+            });
         }
-    };
+    }
+
 
 
     const handleCategoryClick = (category) => {
@@ -275,13 +279,23 @@ const Home = () => {
                     </Grid>
                 </Container>
                 <Dialog fullWidth onClose={() => setCartOpen(false)} open={cartOpen}>
-                    <DialogTitle style={{
-                        backgroundColor: '#229A16',
-                        color: 'white',
-                        fontWeight: 'bold',
-                        textAlign: 'center', }} >
-                        Shopping Cart
+                    <DialogTitle
+                        style={{
+                            backgroundColor: '#229A16',
+                            color: 'white',
+                            fontWeight: 'bold',
+                            textAlign: 'center',
+                        }}
+                    >
+                        <Box display="flex" alignItems="center" justifyContent="center">
+                            Shopping Cart
+                            <Icon  style={{ marginLeft:20 }}>
+                                <AddShoppingCart />
+                            </Icon>
+                        </Box>
                     </DialogTitle>
+
+
                     <DialogContent>
                         <List>
                             {cartItemsData.map((book, index) => (
