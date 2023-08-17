@@ -16,18 +16,20 @@ import {
     CATEGORY_SCIENCE_TECHNOLOGY,
     CATEGORY_GRAPHIC_NOVELS_COMICS, CATEGORY_POETRY
 } from '../variables/constants/actionTypes';
-
+import { toast } from 'react-toastify';
 import * as api from '../api/index';
 
 export const getBooks = () => async (dispatch) => {
     try {
         const { data } = await api.getAllBooks();
-        console.log('data ', data)
+        toast.success('Successfully fetched books');
         dispatch({ type: FETCH_ALL, payload: data });
     } catch (error) {
         console.log(error.message);
+        toast.error(`Error: ${error.message}`);
     }
 }
+
 
 export const getBookByCategory = (category) => async(dispatch) => {
     try {
@@ -56,55 +58,57 @@ export const getBookByCategory = (category) => async(dispatch) => {
         }
 
         const { data } = await api.getBooksByCategory(categoryConstant);
-        console.log('data ==> ',data)
+        toast.success('Successfully fetched books by category');
         dispatch({ type: FETCH_ALL, payload: data });
     } catch (error) {
         console.log(error.message);
+        toast.error(`Error: ${error.message}`);
     }
 }
+
 
 export const getBook = (id) => async (dispatch) => {
     try {
         const { data } = await api.getBookByIsbn(id);
-
+        toast.success('Successfully fetched the book');
         dispatch({ type: FETCH_BOOK_BY_ID, payload: data });
     } catch (error) {
         console.log(error.message);
+        toast.error(`Failed to fetch the book: ${error.message}`);
     }
 }
 
 export const createBook = (book, bookCoverFile, eBookFile) => async (dispatch) => {
-
-    console.log(book)
-    console.log(bookCoverFile)
-    console.log(eBookFile)
     try {
-
         const { data } = await api.createBook(book, bookCoverFile[0], eBookFile[0]);
-
+        toast.success('Book created successfully');
         dispatch({ type: CREATE_BOOK, payload: data });
     } catch (error) {
         console.log(error.message);
+        toast.error(`Failed to create the book: ${error.message}`);
     }
 }
+
 
 export const updateBook = (id, book) => async (dispatch) => {
     try {
         const { data } = await api.updateBook(book);
-
+        toast.success('Book updated successfully');
         dispatch({ type: UPDATE_BOOK, payload: data });
     } catch (error) {
         console.log(error.message);
+        toast.error(`Failed to update the book: ${error.message}`);
     }
 }
 
 export const deleteBook = (id) => async (dispatch) => {
     try {
         await api.deleteBook(id);
-
+        toast.success('Book deleted successfully');
         dispatch({ type: DELETE_BOOK, payload: id });
     } catch (error) {
         console.log(error.message);
+        toast.error(`Failed to delete the book: ${error.message}`);
     }
 }
 

@@ -2,6 +2,7 @@ import React, {useState, useEffect} from "react";
 import ReactDOM from "react-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import useStyles from './style';
 import {
     AppBar,
@@ -51,7 +52,11 @@ const Home = () => {
     const { books } = useSelector((state) => state.books);
 
     useEffect(() => {
-        dispatch(getBooks());
+        dispatch(getBooks()).then(() => {
+            toast.success('Successfully fetched books');
+        }).catch((error) => {
+            toast.error(`Error fetching books: ${error.message}`);
+        });
     }, [dispatch]);
 
     useEffect(() => {
