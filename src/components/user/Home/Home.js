@@ -119,14 +119,10 @@ const Home = () => {
             });
         }
     }
-
-
-
     const handleCategoryClick = (category) => {
         setClickedCategory(category);
         dispatch(getBookByCategory(category));
     };
-
     const calculateAfterDiscount = (originalPrice, discountRate) => {
         let discountedPrice = originalPrice * (1 - discountRate);
         return discountedPrice.toFixed(2);

@@ -18,7 +18,6 @@ const App = () => {
                     <ThemeProvider>
                         <ScrollToTop/>
                         <StyledChart/>
-
                         <Container maxWidth="xl">
                             <Router/>
                         </Container>
@@ -27,7 +26,6 @@ const App = () => {
             </HelmetProvider>
             <ToastContainer/>
         </>
-
     );
 };
 

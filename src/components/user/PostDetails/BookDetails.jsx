@@ -8,11 +8,10 @@ import {getBookById} from '../../../actions/books'; // Updated import
 import CommentSection from './CommentSection';
 import useStyles from './styles';
 import {AddToPhotos} from "@mui/icons-material";
-import {Rating} from "@mui/material";
+import {Rating, TableRow, Table, TableBody, TableCell, TableContainer, TableHead} from "@mui/material";
 
 //This is my bookdetails panel
 const BookDetails = () => {
-
     const {selectedBook: book, books} = useSelector((state) => state.books);
     const {id} = useParams();
     const updatedBook = useSelector(state => state.books.books.find(b => b.isbn === id));
@@ -40,13 +39,13 @@ const BookDetails = () => {
     const openPost = (_id) => {
         navigate(`/customer/book/${_id}`);
     }
-
     const handleRatingChange = (event, newRating) => {
         setRating(newRating);
     };
 
     const handleSubmit = () => {
         console.log(rating);
+        console.log('Redux Comments:', comments);
     };
 
     if (!book) {
@@ -60,7 +59,7 @@ const BookDetails = () => {
     const recommendedPosts = books?.filter(({_id}) => _id !== book._id) || [];
 
     return (
-        <Paper style={{padding: '20px', borderRadius: '15px'}} elevation={6}>
+        <Paper style={{padding: '20px', borderRadius: '15px', margin: '20px 0'}} elevation={6}>
             <div className={classes.card}>
                 <div className={classes.section}>
                     <Typography variant="h3" component="h2">{book.title}</Typography>
@@ -89,10 +88,28 @@ const BookDetails = () => {
 
                     <Divider style={{margin: '20px 0'}}/>
                     <Typography variant="h6"><strong>More Informations </strong></Typography>
-                    <Typography variant="body1"><strong>Language</strong></Typography>
-                    <Typography variant="body1"><strong>Publisher</strong></Typography>
-                    <Typography variant="body1"><strong>ISBN</strong></Typography>
-                    <Typography variant="body1"><strong>Pages</strong></Typography>
+                    <TableContainer component={Paper}>
+                        <Table size="small">
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell fontSize="14px"><strong>Language</strong></TableCell>
+                                    <TableCell fontSize="14px" align="center"><strong>Publisher</strong></TableCell>
+                                    <TableCell fontSize="14px" align="center"><strong>ISBN</strong></TableCell>
+                                    <TableCell fontSize="14px" align="center"><strong>Pages</strong></TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                <TableRow>
+                                    <TableCell>{book.language}</TableCell>
+                                    <TableCell align="center">{book.publisher}</TableCell>
+                                    <TableCell align="center">{book.isbn}</TableCell>
+                                    <TableCell align="center">{book.pages}</TableCell>
+                                </TableRow>
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+
+
                     <Divider style={{margin: '20px 0'}}/>
                     {/*<Typography variant="body1"><strong>Realtime Chat - coming soon!</strong></Typography>*/}
                     <Button variant="contained" raised color="primary">
@@ -104,7 +121,7 @@ const BookDetails = () => {
                     <CommentSection book={updatedBook}/>
                     <Divider style={{margin: '20px 0'}}/>
                     <div style={{display: 'flex', alignItems: 'center', marginTop: '30px'}}>
-                        <Typography variant="h6" style={{marginRight: '70px'}}>What is your rate?</Typography>
+                        <Typography variant="h6" style={{marginRight: '70px'}}><strong>What is your rate?</strong></Typography>
 
                         <div style={{
                             display: 'flex',
