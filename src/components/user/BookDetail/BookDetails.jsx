@@ -4,7 +4,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import moment from 'moment';
 import {useParams, Link} from 'react-router-dom';
 import {useNavigate} from 'react-router-dom'; // Import useNavigate instead of useHistory
-import {getBookById} from '../../../actions/books'; // Updated import
+import {getBookById, submitReview} from '../../../actions'; // Updated import
 import CommentSection from './CommentSection';
 import useStyles from './styles';
 import {AddToPhotos} from "@mui/icons-material";
@@ -16,7 +16,8 @@ const BookDetails = () => {
     const {id} = useParams();
     const updatedBook = useSelector(state => state.books.books.find(b => b.isbn === id));
 
-    const [rating, setRating] = useState(0);
+    const [rating, setRating] = useState(2.5);
+    const [userId, setUserId] = useState(1234);
     const dispatch = useDispatch();
     const navigate = useNavigate(); // Use useNavigate instead of useHistory
 
@@ -44,9 +45,15 @@ const BookDetails = () => {
     };
 
     const handleSubmit = () => {
-        console.log(rating);
-        console.log('Redux Comments:', comments);
+        const reviewObject = {
+            userId: userId,
+            bookIsbn: book.isbn,
+            rating: rating,
+            reviewTexts: comments
+        };
+        dispatch(submitReview(reviewObject));
     };
+
 
     if (!book) {
         return (
@@ -130,7 +137,7 @@ const BookDetails = () => {
                             alignItems: 'center'
                         }}>
                             <Rating name="half-rating"
-                                    defaultValue={2.5}
+                                    defaultValue={rating}
                                     precision={0.5}
                                     onChange={handleRatingChange}
                                     style={{marginTop: '10px'}}/>

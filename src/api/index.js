@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:8081/api/books';
+const API_URL = 'http://localhost:8082/api';
 
 const axiosInstance = axios.create({
     baseURL: API_URL,
@@ -29,11 +29,11 @@ export const getAllBooks = () => {
 }
 
 export const getBookByIsbn = (isbn) => {
-    return axiosInstance.get(`/${isbn}`);
+    return axiosInstance.get(`/books${isbn}`);
 }
 
 export const getBooksByCategory = (category) => {
-    return axiosInstance.get(`/category/${category}`);
+    return axiosInstance.get(`/books/category/${category}`);
 }
 
 export const createBook = (book, bookCoverFile, eBookFile) => {
@@ -48,13 +48,18 @@ export const createBook = (book, bookCoverFile, eBookFile) => {
         }
     };
 
-    return axiosInstance.post('/', formData, config);
+    return axiosInstance.post('/books', formData, config);
 }
 
 export const updateBook = (book) => {
-    return axiosInstance.put('/', book);
+    return axiosInstance.put('/books', book);
 }
 
 export const deleteBook = (isbn) => {
-    return axiosInstance.delete(`/${isbn}`);
+    return axiosInstance.delete(`/books${isbn}`);
+}
+
+export const submitReviewApiCall = (reviewObject) => {
+    console.log('test review',reviewObject)
+    return axiosInstance.post('/review', reviewObject);
 }

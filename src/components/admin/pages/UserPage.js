@@ -31,7 +31,7 @@ import Scrollbar from '../components/scrollbar';
 // sections
 import { UserListHead, UserListToolbar } from '../sections/@dashboard/user';
 import {useDispatch, useSelector} from "react-redux";
-import {createBook, deleteBook, getBooks, updateBook} from "../../../actions/books";
+import {createBook, deleteBook, getBooks, updateBook} from "../../../actions";
 import {
   Dialog,
   DialogActions,

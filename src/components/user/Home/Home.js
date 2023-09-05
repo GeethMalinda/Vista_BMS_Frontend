@@ -30,7 +30,7 @@ import {
     Paper, List, Divider, ListItemAvatar, Avatar
 } from "@material-ui/core";
 import {Search, ArrowDropDown, AddShoppingCart, Add as AddIcon, Remove as RemoveIcon} from "@mui/icons-material";
-import {selectBook, getBooks, getBookByCategory} from "../../../actions/books";
+import {selectBook, getBooks, getBookByCategory} from "../../../actions";
 import Navbar from "../navbar/Navbar";
 import Box from "@mui/material/Box";
 import {Icon} from "@iconify/react";
@@ -53,7 +53,7 @@ const Home = () => {
 
     useEffect(() => {
         dispatch(getBooks()).then(() => {
-            toast.success('Successfully fetched books');
+            console.log("books")
         }).catch((error) => {
             toast.error(`Error fetching books: ${error.message}`);
         });

@@ -14,11 +14,29 @@ import {
     CATEGORY_NONFICTION,
     CATEGORY_KIDS,
     CATEGORY_SCIENCE_TECHNOLOGY,
-    CATEGORY_GRAPHIC_NOVELS_COMICS, CATEGORY_POETRY
+    CATEGORY_GRAPHIC_NOVELS_COMICS, CATEGORY_POETRY, SUBMIT_REVIEW_FAILURE, SUBMIT_REVIEW_SUCCESS, SUBMIT_REVIEW_REQUEST
 } from '../variables/constants/actionTypes';
 import { toast } from 'react-toastify';
 import * as api from '../api/index';
+import {submitReviewApiCall} from "../api/index";
 
+export const submitReview = (reviewObject) => async (dispatch) => {
+    dispatch({ type: SUBMIT_REVIEW_REQUEST });
+
+    try {
+        const response = await submitReviewApiCall(reviewObject);
+
+        dispatch({
+            type: SUBMIT_REVIEW_SUCCESS,
+            payload: response.data
+        });
+    } catch (error) {
+        dispatch({
+            type: SUBMIT_REVIEW_FAILURE,
+            payload: error.message
+        });
+    }
+};
 export const getBooks = () => async (dispatch) => {
     try {
         const { data } = await api.getAllBooks();
@@ -29,7 +47,6 @@ export const getBooks = () => async (dispatch) => {
         toast.error(`Error: ${error.message}`);
     }
 }
-
 
 export const getBookByCategory = (category) => async(dispatch) => {
     try {
@@ -66,7 +83,6 @@ export const getBookByCategory = (category) => async(dispatch) => {
     }
 }
 
-
 export const getBook = (id) => async (dispatch) => {
     try {
         const { data } = await api.getBookByIsbn(id);
@@ -83,12 +99,11 @@ export const createBook = (book, bookCoverFile, eBookFile) => async (dispatch) =
         const { data } = await api.createBook(book, bookCoverFile[0], eBookFile[0]);
         toast.success('Book created successfully');
         dispatch({ type: CREATE_BOOK, payload: data });
-    } catch (error) {
+    }catch (error) {
         console.log(error.message);
         toast.error(`Failed to create the book: ${error.message}`);
     }
 }
-
 
 export const updateBook = (id, book) => async (dispatch) => {
     try {
@@ -140,7 +155,6 @@ export const getBookById = (id) => async (dispatch) => {
         console.log(error);
     }
 };
-
 
 export const getBooksBySearch = (searchQuery) => async (dispatch, getState) => {
     try {
