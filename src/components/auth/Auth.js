@@ -6,8 +6,9 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import useStyles from './styles';
 import Input from './Input';
 import Navbar from "../user/navbar/Navbar";
+import {toast} from "react-toastify";
 
-const initialState = { firstName: '', lastName: '', email: '', password: '', confirmPassword: '' };
+const initialState = { firstName: '', lastName: '', name: '', password: '', confirmPassword: '' };
 
 const SignUp = () => {
   const [form, setForm] = useState(initialState);
@@ -28,15 +29,19 @@ const SignUp = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log('hi')
+    // Check credentials for specific routes
+    if (form.name === 'admin' && form.password === '1234') {
+      navigate('/admin');
+      console.log('si')
 
-    if (isSignup) {
-      // Dummy signup logic
-      console.log('User signed up:', form);
-      navigate('/'); // Use navigate instead of history.push
+    } else if (form.name === 'geeth' && form.password === '1234') {
+      navigate('/customer');
+      console.log('pi')
+
     } else {
-      // Dummy signin logic
-      console.log('User signed in:', form);
-      navigate('/'); // Use navigate instead of history.push
+      // Show toast message for incorrect login
+      toast.error('Incorrect email or password');
     }
   };
 
@@ -59,7 +64,7 @@ const SignUp = () => {
                       <Input name="lastName" label="Last Name" handleChange={handleChange} half />
                     </>
                 )}
-                <Input name="email" label="Email Address" handleChange={handleChange} type="email" />
+                <Input name="name" label="Email Address" handleChange={handleChange} type="text" />
                 <Input name="password" label="Password" handleChange={handleChange} type={showPassword ? 'text' : 'password'} handleShowPassword={handleShowPassword} />
                 { isSignup && <Input name="confirmPassword" label="Repeat Password" handleChange={handleChange} type="password" /> }
               </Grid>

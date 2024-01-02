@@ -25,7 +25,7 @@ axiosInstance.interceptors.response.use(function (response) {
 });
 
 export const getAllBooks = () => {
-    return axiosInstance.get('/');
+    return axiosInstance.get('/books');
 }
 
 export const getBookByIsbn = (isbn) => {
