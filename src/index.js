@@ -7,13 +7,16 @@ import {applyMiddleware, compose, createStore} from "redux";
 import thunk from "redux-thunk";
 import {Provider} from "react-redux";
 import {reducers} from "./reducers";
+import {LoaderProvider} from "./provider/LoaderProvider";
 
 const store = createStore(reducers, {}, compose(applyMiddleware(thunk)));
 
 
 ReactDOM.render(
     <Provider store={store}>
-        <App />
+        <LoaderProvider>
+            <App />
+        </LoaderProvider>
     </Provider>,
-    document.getElementById('root'),
+    document.getElementById('root')
 );

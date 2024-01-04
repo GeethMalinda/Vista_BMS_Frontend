@@ -9,6 +9,7 @@ import {StyledChart} from "./components/admin/components/chart";
 import ThemeProvider from './theme';
 import {ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Loader from "./components/loader/Loader";
 
 const App = () => {
     return (
@@ -25,6 +26,7 @@ const App = () => {
                 </BrowserRouter>
             </HelmetProvider>
             <ToastContainer/>
+            <Loader />
         </>
     );
 };

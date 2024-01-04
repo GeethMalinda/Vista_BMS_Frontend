@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import { AppBar, Typography, Toolbar, Avatar, Button } from '@material-ui/core';
-import { Link } from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 
 import VistaText from '../../../images/img.png';
 import useStyles from './style';
+import AuthService from "../../../api/auth";
 
 //Nav bar
 const Navbar = () => {
@@ -11,13 +12,13 @@ const Navbar = () => {
     const classes = useStyles();
 
     const [user, setUser] = useState(null);
+    const navigate = useNavigate(); // Use useNavigate instead of useHistory
 
-    // Dummy function to simulate getting user data
     const getUser = () => {
         return {
             result: {
                 name: "John Doe",
-                imageUrl: "https://i.pravatar.cc/300", // Replace this with the user's image URL if available
+                imageUrl: "https://i.pravatar.cc/300",
             },
         };
     };
@@ -27,7 +28,8 @@ const Navbar = () => {
     }, []);
 
     const logout = () => {
-        console.log("User logged out"); // Implement your logout logic here
+        AuthService.logout();
+        navigate('/login');
         setUser(null);
     };
 

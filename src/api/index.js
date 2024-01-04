@@ -1,4 +1,5 @@
 import axios from 'axios';
+import {toast} from "react-toastify";
 
 const API_URL = 'http://localhost:8082/api';
 
@@ -7,20 +8,35 @@ const axiosInstance = axios.create({
 });
 
 axiosInstance.interceptors.request.use(function (config) {
-    // Here, you can still perform actions before the request is sent
     return config;
 }, function (error) {
-    // If there's an error in the request, reject the Promise
     return Promise.reject(error);
 });
 
 axiosInstance.interceptors.response.use(function (response) {
-    // Any status code that lie within the range of 2xx cause this function to trigger
-    // Do something with response data
+
     return response;
 }, function (error) {
-    // Any status codes that falls outside the range of 2xx cause this function to trigger
-    // Do something with response error
+
+    return Promise.reject(error);
+});
+
+axiosInstance.interceptors.request.use(function (config) {
+    const token = localStorage.getItem('jwtToken');
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+}, function (error) {
+    return Promise.reject(error);
+});
+
+axiosInstance.interceptors.response.use(function (response) {
+    return response;
+}, function (error) {
+    if (error.response && error.response.status === 403) {
+        toast.error("Access Forbidden: You might not have the required permissions.");
+    }
     return Promise.reject(error);
 });
 

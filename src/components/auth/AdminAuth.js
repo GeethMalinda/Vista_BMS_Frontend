@@ -7,13 +7,10 @@ import useStyles from './styles';
 import Input from './Input';
 import Navbar from "../user/navbar/Navbar";
 import {toast} from "react-toastify";
-import AuthService from "../../api/auth";
-import {useLoader} from "../../provider/LoaderProvider";
-const { setLoading } = useLoader();
 
 const initialState = { firstName: '', lastName: '', name: '', password: '', confirmPassword: '' };
 
-const SignUp = () => {
+const AdminSignUp = () => {
   const [form, setForm] = useState(initialState);
   const [isSignup, setIsSignup] = useState(false);
   const dispatch = useDispatch();
@@ -29,37 +26,21 @@ const SignUp = () => {
     setShowPassword(false);
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    setLoading(true);
-    if (isSignup) {
-      const defaultRoles = ['ROLE_USER'];
+    console.log('hi')
+    // Check credentials for specific routes
+    if (form.name === 'admin' && form.password === '1234') {
+      navigate('/admin');
+      console.log('si')
 
-      const userData = {
-        username: form.firstName +' '+form.lastName,
-        password: form.password,
-        roles: defaultRoles
-      };
+    } else if (form.name === 'geeth' && form.password === '1234') {
+      navigate('/customer');
+      console.log('pi')
 
-      try {
-        await AuthService.register(userData);
-        toast.success('Registration successful');
-        switchMode();
-        setLoading(false);
-      } catch (error) {
-        toast.error(error.response || 'Registration failed');
-        setLoading(false);
-      }
     } else {
-      try {
-        const response = await AuthService.login(form.name, form.password);
-        toast.success('Login successful');
-        navigate('/admin');
-        setLoading(false);
-      } catch (error) {
-        toast.error(error.response || 'Invalid login credentials');
-        setLoading(false);
-      }
+      // Show toast message for incorrect login
+      toast.error('Incorrect email or password');
     }
   };
 
@@ -104,4 +85,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default AdminSignUp;

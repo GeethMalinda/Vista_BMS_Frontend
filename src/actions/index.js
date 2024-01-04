@@ -1,8 +1,6 @@
-//books actions class
 import {
     FETCH_BY_SEARCH,
     LIKE,
-    COMMENT,
     SET_BOOKS,
     SELECT_BOOK,
     FETCH_ALL,
@@ -75,7 +73,6 @@ export const getBookByCategory = (category) => async(dispatch) => {
         }
 
         const { data } = await api.getBooksByCategory(categoryConstant);
-        toast.success('Successfully fetched books by category');
         dispatch({ type: FETCH_ALL, payload: data });
     } catch (error) {
         console.log(error.message);
@@ -86,7 +83,7 @@ export const getBookByCategory = (category) => async(dispatch) => {
 export const getBook = (id) => async (dispatch) => {
     try {
         const { data } = await api.getBookByIsbn(id);
-        toast.success('Successfully fetched the book');
+        toast.success('Successfully Books Loaded');
         dispatch({ type: FETCH_BOOK_BY_ID, payload: data });
     } catch (error) {
         console.log(error.message);

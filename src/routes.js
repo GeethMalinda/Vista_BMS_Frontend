@@ -15,6 +15,7 @@ import BlogPage from "./components/admin/pages/BlogPage";
 import Page404 from "./components/admin/pages/Page404";
 import BookDetails from "./components/user/BookDetail/BookDetails";
 import Checkout from "./components/user/pay/Checkout";
+import AdminSignUp from "./components/auth/AdminAuth";
 
 // ----------------------------------------------------------------------
 
@@ -42,6 +43,11 @@ export default function Router() {
     {
       path: '/login',
       element: <SignUp />,
+
+    },
+    {
+      path: '/admin-login',
+      element: <AdminSignUp />,
 
     },
     {
