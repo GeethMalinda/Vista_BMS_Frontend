@@ -16,6 +16,7 @@ import Page404 from "./components/admin/pages/Page404";
 import BookDetails from "./components/user/BookDetail/BookDetails";
 import Checkout from "./components/user/pay/Checkout";
 import AdminSignUp from "./components/auth/AdminAuth";
+import ProtectedRoute from "./ProtectedRoute/ProtectedRoute";
 
 // ----------------------------------------------------------------------
 
@@ -23,13 +24,14 @@ export default function Router() {
   const routes = useRoutes([
     {
       path: '/admin',
-      element: <DashboardLayout />,
+      element: <ProtectedRoute><DashboardLayout /></ProtectedRoute>, // Wrap with ProtectedRoute
       children: [
         { element: <Navigate to="/admin/app" />, index: true },
         { path: 'app', element: <DashboardAppPage /> },
         { path: 'user', element: <UserPage /> },
         { path: 'products', element: <ProductsPage /> },
         { path: 'blog', element: <BlogPage /> },
+        { path: 'authError', element: <Page404 /> },
       ],
     },
     {

@@ -26,7 +26,6 @@ const App = () => {
                 </BrowserRouter>
             </HelmetProvider>
             <ToastContainer/>
-            <Loader />
         </>
     );
 };

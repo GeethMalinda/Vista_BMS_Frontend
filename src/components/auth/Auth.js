@@ -8,8 +8,6 @@ import Input from './Input';
 import Navbar from "../user/navbar/Navbar";
 import {toast} from "react-toastify";
 import AuthService from "../../api/auth";
-import {useLoader} from "../../provider/LoaderProvider";
-const { setLoading } = useLoader();
 
 const initialState = { firstName: '', lastName: '', name: '', password: '', confirmPassword: '' };
 
@@ -31,7 +29,6 @@ const SignUp = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
     if (isSignup) {
       const defaultRoles = ['ROLE_USER'];
 
@@ -45,17 +42,14 @@ const SignUp = () => {
         await AuthService.register(userData);
         toast.success('Registration successful');
         switchMode();
-        setLoading(false);
       } catch (error) {
         toast.error(error.response || 'Registration failed');
-        setLoading(false);
       }
     } else {
       try {
         const response = await AuthService.login(form.name, form.password);
         toast.success('Login successful');
         navigate('/admin');
-        setLoading(false);
       } catch (error) {
         toast.error(error.response || 'Invalid login credentials');
         setLoading(false);

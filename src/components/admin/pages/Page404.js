@@ -1,10 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 import { Link as RouterLink } from 'react-router-dom';
-// @mui
 import { styled } from '@mui/material/styles';
 import { Button, Typography, Container, Box } from '@mui/material';
-
-// ----------------------------------------------------------------------
 
 const StyledContent = styled('div')(({ theme }) => ({
   maxWidth: 480,
@@ -16,13 +13,11 @@ const StyledContent = styled('div')(({ theme }) => ({
   padding: theme.spacing(12, 0),
 }));
 
-// ----------------------------------------------------------------------
-
 export default function Page404() {
   return (
     <>
       <Helmet>
-        <title> 404 Page Not Found | Minimal UI </title>
+        <title> 400 Page Not Found | Authentication Failed </title>
       </Helmet>
 
       <Container>
