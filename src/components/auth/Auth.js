@@ -15,7 +15,7 @@ const SignUp = () => {
   const [form, setForm] = useState(initialState);
   const [isSignup, setIsSignup] = useState(false);
   const dispatch = useDispatch();
-  const navigate = useNavigate(); // Use useNavigate instead of useHistory
+  const navigate = useNavigate();
   const classes = useStyles();
 
   const [showPassword, setShowPassword] = useState(false);
@@ -52,7 +52,6 @@ const SignUp = () => {
         navigate('/admin');
       } catch (error) {
         toast.error(error.response || 'Invalid login credentials');
-        setLoading(false);
       }
     }
   };
@@ -94,7 +93,6 @@ const SignUp = () => {
           </Paper>
         </Container>
       </>
-
   );
 };
 

@@ -12,7 +12,12 @@ import {
     CATEGORY_NONFICTION,
     CATEGORY_KIDS,
     CATEGORY_SCIENCE_TECHNOLOGY,
-    CATEGORY_GRAPHIC_NOVELS_COMICS, CATEGORY_POETRY, SUBMIT_REVIEW_FAILURE, SUBMIT_REVIEW_SUCCESS, SUBMIT_REVIEW_REQUEST
+    CATEGORY_GRAPHIC_NOVELS_COMICS,
+    CATEGORY_POETRY,
+    SUBMIT_REVIEW_FAILURE,
+    SUBMIT_REVIEW_SUCCESS,
+    SUBMIT_REVIEW_REQUEST,
+    CREATE_OFFER, FETCH_OFFERS, UPDATE_OFFER, DELETE_OFFER
 } from '../variables/constants/actionTypes';
 import { toast } from 'react-toastify';
 import * as api from '../api/index';
@@ -164,21 +169,44 @@ export const getBooksBySearch = (searchQuery) => async (dispatch, getState) => {
     }
 };
 
-// export const getBooks = () => async (dispatch) => {
-//     try {
-//         dispatch({
-//             type: FETCH_ALL,
-//             payload: {
-//                 data: dummyData,
-//                 currentPage: 1,
-//                 numberOfPages: 1,
-//             },
-//         });
-//     } catch (error) {
-//         console.log(error);
-//     }
-// };
+export const fetchOffers = () => async (dispatch) => {
+    try {
+        const { data } = await api.getOffers();
+        dispatch({ type: FETCH_OFFERS, payload: data });
+    } catch (error) {
+        toast.error(`Failed to fetch offers: ${error.message}`);
+    }
+};
 
+export const addOffer = (offerData) => async (dispatch) => {
+    try {
+        const { data } = await api.createOffer(offerData);
+        dispatch({ type: CREATE_OFFER, payload: data });
+        toast.success('Offer created successfully');
+    } catch (error) {
+        toast.error(`Failed to create offer: ${error.message}`);
+    }
+};
+
+export const editOffer = (id, offerData) => async (dispatch) => {
+    try {
+        const { data } = await api.updateOffer(id, offerData);
+        dispatch({ type: UPDATE_OFFER, payload: data });
+        toast.success('Offer updated successfully');
+    } catch (error) {
+        toast.error(`Failed to update offer: ${error.message}`);
+    }
+};
+
+export const removeOffer = (id) => async (dispatch) => {
+    try {
+        await api.deleteOffer(id);
+        dispatch({ type: DELETE_OFFER, payload: id });
+        toast.success('Offer deleted successfully');
+    } catch (error) {
+        toast.error(`Failed to delete offer: ${error.message}`);
+    }
+};
 
 export const likeBook = (id) => async (dispatch) => {
     try {

@@ -17,6 +17,7 @@ import BookDetails from "./components/user/BookDetail/BookDetails";
 import Checkout from "./components/user/pay/Checkout";
 import AdminSignUp from "./components/auth/AdminAuth";
 import ProtectedRoute from "./ProtectedRoute/ProtectedRoute";
+import OfferPage from "./components/admin/pages/OfferPage";
 
 // ----------------------------------------------------------------------
 
@@ -32,6 +33,7 @@ export default function Router() {
         { path: 'products', element: <ProductsPage /> },
         { path: 'blog', element: <BlogPage /> },
         { path: 'authError', element: <Page404 /> },
+        { path: 'offer', element: <OfferPage /> },
       ],
     },
     {

@@ -27,6 +27,11 @@ const navConfig = [
     icon: icon('ic_blog'),
   },
   {
+    title: 'Seasonal Offers',
+    path: '/admin/user',
+    icon: icon('ic_soffer'),
+  },
+  {
     title: 'login',
     path: '/login',
     icon: icon('ic_lock'),

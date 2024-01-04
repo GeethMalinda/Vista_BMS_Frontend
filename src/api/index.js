@@ -79,3 +79,12 @@ export const submitReviewApiCall = (reviewObject) => {
     console.log('test review',reviewObject)
     return axiosInstance.post('/review', reviewObject);
 }
+
+
+
+// ... existing API calls
+
+export const getOffers = () => axiosInstance.get('/seasonal-offers/current');
+export const createOffer = (offerData) => axiosInstance.post('/seasonal-offers', offerData);
+export const updateOffer = (id, offerData) => axiosInstance.put(`/seasonal-offers/${id}`, offerData);
+export const deleteOffer = (id) => axiosInstance.delete(`/seasonal-offers/${id}`);
